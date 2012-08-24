@@ -39,7 +39,7 @@ public class TwoWaySerialComm {
 				OutputStream out = serialPort.getOutputStream();
 
 				(new Thread(new SerialReader(in))).start();
-				(new Thread(new SerialWriter(out))).start();
+				(new Thread(new SerialWriter(out,portName))).start();
 
 			} else {
 				System.out.println("Error: Only serial ports are handled by this example.");
@@ -50,7 +50,6 @@ public class TwoWaySerialComm {
 	/** */
 	public static class SerialReader implements Runnable {
 		InputStream in;
-
 		public SerialReader(InputStream in) {
 			this.in = in;
 		}
@@ -71,16 +70,26 @@ public class TwoWaySerialComm {
 	/** */
 	public static class SerialWriter implements Runnable {
 		OutputStream out;
-
-		public SerialWriter(OutputStream out) {
+		String portName;
+		public SerialWriter(OutputStream out, String portName) throws IOException {
 			this.out = out;
+			this.portName = portName;
 		}
 
 		public void run() {
 			try {
 				int c = 0;
+				boolean first = true;
+				String  msg = (portName.concat(": "));
 				while ((c = System.in.read()) > -1) {
+					if(first){
+						first = false;
+						this.out.write(msg.getBytes());
+					}
 					this.out.write(c);
+					if(c == 10){        // if character is an 'enter' then the 
+						first = true;   // next time the port name must be displayed
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
