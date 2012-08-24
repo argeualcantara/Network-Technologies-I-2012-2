@@ -7,6 +7,8 @@ import gnu.io.SerialPort;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import br.unifor.redes1.layout.JanelaPrincipal;
 /**
  * Classe de comunicação serial bi-direcional. Ao final do arquivo, deve ser dita qual porta abrir.
  * Devem ser abertas 2 portas. 
@@ -14,8 +16,13 @@ import java.io.OutputStream;
  *
  */
 public class TwoWaySerialComm {
-	public TwoWaySerialComm() {
+	private JanelaPrincipal principal;
+	private InputStream in;
+	private OutputStream out;
+	private String portName;
+	public TwoWaySerialComm(JanelaPrincipal principal) {
 		super();
+		this.principal = principal;
 	}
 
 	/**
@@ -23,8 +30,9 @@ public class TwoWaySerialComm {
 	 * @param portName
 	 * @throws Exception
 	 */
-	void connect(String portName) throws Exception {
+	public void connect(String portName) throws Exception {
 		CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
+		this.portName = portName;
 		if (portIdentifier.isCurrentlyOwned()) {
 			System.out.println("Error: Port is currently in use");
 		} else {
@@ -35,11 +43,8 @@ public class TwoWaySerialComm {
 				serialPort.setSerialPortParams(57600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
 						SerialPort.PARITY_NONE);
 
-				InputStream in = serialPort.getInputStream();
-				OutputStream out = serialPort.getOutputStream();
-
-				(new Thread(new SerialReader(in))).start();
-				(new Thread(new SerialWriter(out,portName))).start();
+				this.in = serialPort.getInputStream();
+				this.out = serialPort.getOutputStream();
 
 			} else {
 				System.out.println("Error: Only serial ports are handled by this example.");
@@ -47,61 +52,47 @@ public class TwoWaySerialComm {
 		}
 	}
 
-	/** */
-	public static class SerialReader implements Runnable {
-		InputStream in;
-		public SerialReader(InputStream in) {
-			this.in = in;
-		}
-
-		public void run() {
-			byte[] buffer = new byte[1024];
-			int len = -1;
-			try {
-				while ((len = this.in.read(buffer)) > -1) {
-					System.out.print(new String(buffer, 0, len));
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/** */
-	public static class SerialWriter implements Runnable {
-		OutputStream out;
-		String portName;
-		public SerialWriter(OutputStream out, String portName) throws IOException {
-			this.out = out;
-			this.portName = portName;
-		}
-
-		public void run() {
-			try {
-				int c = 0;
-				boolean first = true;
-				String  msg = (portName.concat(": "));
-				while ((c = System.in.read()) > -1) {
-					if(first){
-						first = false;
-						this.out.write(msg.getBytes());
-					}
-					this.out.write(c);
-					if(c == 10){        // if character is an 'enter' then the 
-						first = true;   // next time the port name must be displayed
-					}
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public static void main(String[] args) {
+	public void mandarMensagem() {
+		byte[] texto = this.principal.getTextFieldCom().getText().getBytes();
 		try {
-			(new TwoWaySerialComm()).connect("COM1"); // trocar por porta disponível
-		} catch (Exception e) {
+			int len = 0;
+			while( (len = this.in.read(texto)) > -1){
+				this.out.write(texto);
+				len = -1;
+			}
+			this.principal.getTextAreaCom().setText(
+					this.principal.getTextFieldCom().getText()+"\n"+this.principal.getTextAreaCom().getText()
+					);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+
+	public void writeMessage() {
+		try {
+			int c = 0;
+			boolean first = true;
+			String msg = (portName.concat(": "));
+			while ((c = this.in.read()) > -1) {
+				if (first) {
+					first = false;
+					this.out.write(msg.getBytes());
+				}
+				this.out.write(c);
+				if (c == 10) { // if character is an 'enter' then the
+					first = true; // next time the port name must be displayed
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+//	public static void main(String[] args) {
+//		try {
+//			(new TwoWaySerialComm()).connect("COM2"); // trocar por porta disponível
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 }

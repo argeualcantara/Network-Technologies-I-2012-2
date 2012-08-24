@@ -99,12 +99,12 @@ public class TwoWaySerialCommInteractive {
 		}
 	}
 
-	public static void main(String[] args) {
-		try {
-			(new TwoWaySerialComm()).connect("COM1");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public static void main(String[] args) {
+//		try {
+//			(new TwoWaySerialComm()).connect("COM1");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 }
