@@ -24,8 +24,8 @@ public class Reader extends Thread {
 			try {
 				while ((len = this.inputStream.read(buffer)) > -1) {
 					
-					String parsedResult = CoolProtocolParser.parseFrom(buffer);
-					System.out.println("READ -> "+parsedResult);
+//					String parsedResult = CoolProtocolParser.parseFrom(buffer);
+//					System.out.println("READ -> "+parsedResult);
 //					System.out.print(new String(buffer, 0, len));
 				}
 			} catch (IOException e) {
