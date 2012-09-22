@@ -1,5 +1,8 @@
 package app.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Frame {
 
 	private byte[] destination;
@@ -11,6 +14,7 @@ public class Frame {
 	private byte[] crc16;
 
 	public Frame() {
+
 	}
 
 	public Frame(byte[] destination, byte[] source, byte groupID, byte[] payload) {
@@ -79,9 +83,69 @@ public class Frame {
 
 	public byte[] retrieveContent() {
 
-		byte[] concatanedFields = new byte[12];
+		List<Byte> content = new ArrayList<Byte>();
 		
-		return concatanedFields;
+		for(int i=0; i <= destination.length; i++){
+			content.add(destination[i]);
+		}
+		
+		content.add(messageID);
+		content.add(groupID);
+		content.add(payloadLength);
+		
+		for(int i=0; i <= source.length; i++){
+			content.add(source[i]);
+		}
+		
+		for(int i=0; i <= payload.length; i++){
+			content.add(payload[i]);
+		}
+		
+		for(int i=0; i <= crc16.length; i++){
+			content.add(crc16[i]);
+		}
+
+     
+		Byte[] result = (Byte[]) content.toArray();
+		
+		byte[] toReturn = new byte[result.length];
+		
+		for (int i = 0; i < toReturn.length; i++) {
+			toReturn[i] = result[i];
+		}
+		
+		return toReturn;
+	}
+
+	public byte[] retrieveContentWithoutCRC() {
+
+	List<Byte> content = new ArrayList<Byte>();
+		
+		for(int i=0; i <= destination.length; i++){
+			content.add(destination[i]);
+		}
+		
+		content.add(messageID);
+		content.add(groupID);
+		content.add(payloadLength);
+		
+		for(int i=0; i <= source.length; i++){
+			content.add(source[i]);
+		}
+		
+		for(int i=0; i <= payload.length; i++){
+			content.add(payload[i]);
+		}
+     
+		Byte[] result = (Byte[]) content.toArray();
+		
+		byte[] toReturn = new byte[result.length];
+		
+		for (int i = 0; i < toReturn.length; i++) {
+			toReturn[i] = result[i];
+		}
+		
+		return toReturn;
 	}
 
 }
