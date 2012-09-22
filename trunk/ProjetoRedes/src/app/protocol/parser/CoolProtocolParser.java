@@ -22,8 +22,18 @@ public class CoolProtocolParser {
 	//volta
 	public static String parseFrom(byte[] message) {
 
-		// gera string baseada no byte array
-		
+		// gera string baseada no byte array 
+		if(true/*cheagem do crc estiver correta*/){
+			
+			Frame created = Frame.createFromContent(message);
+			
+			if(created.getGroupID() == created.getGroupID()){
+				byte[] source = created.getSource();
+				byte[] destination = created.getDestination();
+				created.setDestination(source);
+				created.setSource(destination);
+			}
+		}
 		
 		return "";
 	}

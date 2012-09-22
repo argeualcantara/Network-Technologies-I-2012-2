@@ -23,7 +23,8 @@ public class Main {
 
 		if (writerConnection != null && readerConnection != null) {
 
-			Reader reader = new Reader(readerConnection.getInputStream());
+			Reader reader = new Reader(readerConnection);
+			
 			Writer writer = new Writer(writerConnection.getOutputStream());
 
 			reader.start();
