@@ -147,5 +147,13 @@ public class Frame {
 		
 		return toReturn;
 	}
+	
+	public static Frame createFromContent(byte[]content ){
+		
+		// set do pacote tal a tal
+		//this.groupID = 
+		
+		return null;
+	}
 
 }
