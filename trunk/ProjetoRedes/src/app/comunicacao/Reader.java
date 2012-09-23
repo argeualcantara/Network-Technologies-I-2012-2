@@ -28,7 +28,9 @@ public class Reader extends Thread{// implements SerialPortEventListener{
 						this.inputStream.read(buffer);
 						if(buffer.length>0){
 							String parsedResult = CoolProtocolParser.parseFrom(buffer);
-							System.out.println("READ -> "+parsedResult);
+//							System.out.println("READ -> "+parsedResult);
+//							this.outputStream.write(buffer);
+//							this.outputStream.flush();
 						}
 				}
 			} catch (IOException e) {
