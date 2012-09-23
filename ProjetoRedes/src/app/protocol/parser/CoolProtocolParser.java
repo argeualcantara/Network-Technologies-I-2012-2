@@ -1,6 +1,6 @@
 package app.protocol.parser;
 
-import sun.misc.CRC16;
+import app.utils.CRC16;
 import app.protocol.Frame;
 
 public class CoolProtocolParser {
@@ -23,19 +23,24 @@ public class CoolProtocolParser {
 	public static String parseFrom(byte[] message) {
 
 		// gera string baseada no byte array 
-		if(true/*cheagem do crc estiver correta*/){
-			
-			Frame created = Frame.createFromContent(message);
-			
-			if(created.getGroupID() == created.getGroupID()){
-				byte[] source = created.getSource();
-				byte[] destination = created.getDestination();
-				created.setDestination(source);
-				created.setSource(destination);
+//		if(true/*cheagem do crc estiver correta*/){
+//			
+			Frame created = new Frame();
+			created = created.createFromContent(message);
+			String crcRecebido = new String(created.getCrc16());
+			String crclocal = new String(CRC16.calcularCRC(created.retrieveContentWithoutCRC()));
+			if(crcRecebido.equals(crclocal)){
+				
 			}
-		}
-		
-		return "";
+//			if(created.getGroupID() == created.getGroupID()){
+//				byte[] source = created.getSource();
+//				byte[] destination = created.getDestination();
+//				created.setDestination(source);
+//				created.setSource(destination);
+//			}
+//		}
+		return new String(created.getPayload());
 	}
+
 
 }
