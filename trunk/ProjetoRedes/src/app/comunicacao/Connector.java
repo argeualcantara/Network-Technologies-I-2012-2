@@ -7,7 +7,7 @@ import app.domain.EstablishedConnection;
 
 public class Connector {
 
-	public EstablishedConnection connect(String portName) {
+	public EstablishedConnection connect(String portName, byte groupID, String name) {
 
 		CommPortIdentifier portIdentifier;
 
@@ -23,7 +23,7 @@ public class Connector {
 							SerialPort.PARITY_NONE);
 
 					return new EstablishedConnection(portName, serialPort.getInputStream(),
-							serialPort.getOutputStream());
+							serialPort.getOutputStream(), groupID, name.getBytes());
 				} else {
 					System.out.println("Error: Only serial ports are handled by this example.");
 				}

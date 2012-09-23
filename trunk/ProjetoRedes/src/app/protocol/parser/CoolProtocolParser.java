@@ -25,13 +25,11 @@ public class CoolProtocolParser {
 		// gera string baseada no byte array 
 //		if(true/*cheagem do crc estiver correta*/){
 //			
-			Frame created = new Frame();
-			created = created.createFromContent(message);
-			String crcRecebido = new String(created.getCrc16());
-			String crclocal = new String(CRC16.calcularCRC(created.retrieveContentWithoutCRC()));
-			if(crcRecebido.equals(crclocal)){
+//			Frame created = new Frame();
+//			created = created.createFromContent(message);
+//			String crcRecebido = new String(created.getCrc16());
+//			String crclocal = new String(CRC16.calcularCRC(created.retrieveContentWithoutCRC()));
 				
-			}
 //			if(created.getGroupID() == created.getGroupID()){
 //				byte[] source = created.getSource();
 //				byte[] destination = created.getDestination();
@@ -39,8 +37,8 @@ public class CoolProtocolParser {
 //				created.setSource(destination);
 //			}
 //		}
-		return new String(created.getPayload());
+//		return new String(created.getPayload());
+		return null;
 	}
-
 
 }
