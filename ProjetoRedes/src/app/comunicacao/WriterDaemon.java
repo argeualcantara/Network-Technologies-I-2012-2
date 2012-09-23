@@ -2,30 +2,35 @@ package app.comunicacao;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.LinkedList;
+import java.util.List;
 
 import app.domain.EstablishedConnection;
+import app.protocol.Frame;
 
 public class WriterDaemon extends Thread {
 
 	private final InputStream inputStream;
 	private final OutputStream outputStream;
-	private final byte[] content;
+	private final LinkedList<Frame> frames;
 	private final int secondsTimeout;
 	private final int maxTries;
 	private byte[] ack;
 	private boolean hasToListen = true;
 	private int tries = 0;
-
-	public WriterDaemon(EstablishedConnection connection, byte[] content, Integer secondsTimeout, int maxTries) {
+    private Frame frameToSend;
+	
+	public WriterDaemon(EstablishedConnection connection, LinkedList<Frame> frames, Integer secondsTimeout, int maxTries) {
 		this.inputStream = connection.getInputStream();
 		this.outputStream = connection.getOutputStream();
-		this.content = content;
+		this.frames = frames;
 		this.secondsTimeout = secondsTimeout * 1000;
 		this.maxTries = maxTries;
 	}
 
 	public void startDaemon() {
 		this.setPriority(MIN_PRIORITY);
+		frameToSend = frames.poll();
 		this.start();
 		startListening();
 	}
@@ -35,23 +40,32 @@ public class WriterDaemon extends Thread {
 
 		try {
 
-			while (!gotAck() && tries < maxTries) {
+			while (!frames.isEmpty() | (!gotAck() && tries < maxTries)  ) {
 				tries++;
-				outputStream.write(content);
+				
+				
+				outputStream.write(frameToSend.retrieveContent());
 				outputStream.flush();
 				System.out.println("Tentando enviar o pacote pela " + tries + " vez.");
 				Thread.sleep(secondsTimeout);
 
 			}
 
-			stopListening();
+			if(frames.isEmpty()){
+				stopListening();
+				System.out.println("Todos os pacotes foram enviados!");
+			}
 
 			if (tries == maxTries && !gotAck()) {
+				stopListening();
 				System.out.println("[FALHA] Pacote foi enviado " + tries + " vezes, sem sucesso!");
 
-			} else {
-				System.out.println("[OK] Pacote enviado com sucesso, com " + tries + " tentativas.");
-			}
+			} 
+//				
+////				frameToSend = frames.poll();
+//				System.out.println("[OK] Pacote enviado com sucesso, com " + tries + " tentativas.");
+//			}
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -81,6 +95,12 @@ public class WriterDaemon extends Thread {
 
 	private boolean gotAck() {
 
-		return ack != null && ack.length > 0;
+		boolean hasAck = ack != null && ack.length > 0;
+			if(hasAck){
+				System.out.println("[OK] Pacote enviado com sucesso, com " + tries + " tentativas.");
+				tries = 0;
+				frameToSend = frames.poll();
+			}
+		return hasAck;
 	}
 }

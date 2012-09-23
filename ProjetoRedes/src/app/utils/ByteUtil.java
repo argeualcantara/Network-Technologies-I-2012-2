@@ -9,4 +9,16 @@ public class ByteUtil {
 		}
 		return false;
 	}
+
+	public static byte[] retrievePartOfContent(byte[] content, int start, int end) {
+
+		byte[] toResult = new byte[end - start +1];
+
+		int j = 0;
+		for (int i = start; i <= end; i++ , j++) {
+			toResult[j] = content[i];
+		}
+
+		return toResult;
+	}
 }
