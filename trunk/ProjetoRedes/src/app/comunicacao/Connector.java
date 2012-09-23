@@ -17,7 +17,6 @@ public class Connector {
 				System.out.println("Error: Port is currently in use");
 			} else {
 				CommPort commPort = portIdentifier.open(Connector.class.getName(), 2000);
-
 				if (commPort instanceof SerialPort) {
 					SerialPort serialPort = (SerialPort) commPort;
 					serialPort.setSerialPortParams(57600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,

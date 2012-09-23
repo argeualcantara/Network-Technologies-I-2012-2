@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import app.domain.EstablishedConnection;
 import app.protocol.parser.CoolProtocolParser;
 
-public class Reader extends Thread {
+public class Reader extends Thread{// implements SerialPortEventListener{
 
 	private final InputStream inputStream;
     private final OutputStream outputStream;
@@ -22,23 +22,28 @@ public class Reader extends Thread {
 
 	@Override
 	public void run() {
-
-		while (true) {
-
-			byte[] buffer = new byte[1024];
-			int len = -1;
 			try {
-				while ((len = this.inputStream.read(buffer)) > -1) {
-					
-//					String parsedResult = CoolProtocolParser.parseFrom(buffer);
-//					System.out.println("READ -> "+parsedResult);
-//					System.out.print(new String(buffer, 0, len));
+				while(true){
+					byte[] buffer = new byte[this.inputStream.available()];
+						this.inputStream.read(buffer);
+						if(buffer.length>0){
+							String parsedResult = CoolProtocolParser.parseFrom(buffer);
+							System.out.println("READ -> "+parsedResult);
+						}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-
 	}
+
+//
+//	@Override
+//	public void serialEvent(SerialPortEvent arg0) {
+//		switch(arg0.getEventType()){
+//		case SerialPortEvent.DATA_AVAILABLE:
+//			this.start();
+//			break;
+//		}
+//	}
 
 }

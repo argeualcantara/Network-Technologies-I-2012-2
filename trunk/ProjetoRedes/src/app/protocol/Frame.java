@@ -148,12 +148,19 @@ public class Frame {
 		return toReturn;
 	}
 	
-	public static Frame createFromContent(byte[]content ){
-		
-		// set do pacote tal a tal
-		//this.groupID = 
-		
-		return null;
+	public Frame createFromContent(byte[]content ){
+			
+		this.destination = new byte [] {content[0],content[1]};
+		this.messageID = content[2];
+		this.groupID = content[3];
+		this.payloadLength = content[4];
+		this.source = new byte[] {content[5], content[6]};
+		this.payload = new byte [(content.length-2) - 7];
+		for (int i = 7, j=0; i < content.length - 2; i++, j++) {
+			this.payload[j] = content[i];
+		}
+		this.crc16 = new byte[] {content[content.length-2], content[content.length-1]};
+		return this;
 	}
 
 }
