@@ -30,16 +30,7 @@ public class Writer implements SerialPortEventListener {
 
 	@Override
 	public void serialEvent(SerialPortEvent arg0) {
-		switch(arg0.getEventType()){
-		 case SerialPortEvent.DATA_AVAILABLE:
-			try {
-				inputStream.read();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
+		System.out.println("event Writer");
 	}
 
 }
