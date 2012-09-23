@@ -1,5 +1,8 @@
 package app.comunicacao;
 
+import gnu.io.SerialPortEvent;
+import gnu.io.SerialPortEventListener;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -7,7 +10,7 @@ import java.io.OutputStream;
 import app.domain.EstablishedConnection;
 import app.protocol.parser.CoolProtocolParser;
 
-public class Reader extends Thread{// implements SerialPortEventListener{
+public class Reader extends Thread implements SerialPortEventListener{
 
 	private final InputStream inputStream;
     private final OutputStream outputStream;
@@ -38,14 +41,10 @@ public class Reader extends Thread{// implements SerialPortEventListener{
 			}
 	}
 
-//
-//	@Override
-//	public void serialEvent(SerialPortEvent arg0) {
-//		switch(arg0.getEventType()){
-//		case SerialPortEvent.DATA_AVAILABLE:
-//			this.start();
-//			break;
-//		}
-//	}
+
+	@Override
+	public void serialEvent(SerialPortEvent arg0) {
+		System.out.println("event Reader");
+	}
 
 }

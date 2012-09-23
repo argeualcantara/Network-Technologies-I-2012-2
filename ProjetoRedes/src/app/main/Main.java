@@ -30,14 +30,19 @@ public class Main {
 			Reader reader = new Reader(readerConnection);
 			
 			Writer writer = new Writer(writerConnection);
-//			try{
-//				CommPortIdentifier cpi = CommPortIdentifier.getPortIdentifier(portReader);
-//				CommPort commPort = cpi.open(Connector.class.getName(), 2000);
-//				SerialPort portaReader = (SerialPort) commPort;
-//				portaReader.notifyOnDataAvailable(true);
-//			}catch(Exception e){
-//				
-//			}
+			try{
+				CommPortIdentifier cpi = CommPortIdentifier.getPortIdentifier(portReader);
+				CommPort commPort = cpi.open(Connector.class.getName(), 2000);
+				SerialPort portaReader = (SerialPort) commPort;
+				portaReader.notifyOnDataAvailable(true);
+				
+				cpi = CommPortIdentifier.getPortIdentifier(portReader);
+				commPort = cpi.open(Connector.class.getName(), 2000);
+				SerialPort portaWriter = (SerialPort) commPort;
+				portaWriter.notifyOnDataAvailable(true);
+			}catch(Exception e){
+				
+			}
 			
 			// Informado pelo usuario
 			String message = "TESTE";
