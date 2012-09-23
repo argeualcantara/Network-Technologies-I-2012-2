@@ -37,7 +37,6 @@ public class Reader extends Thread {// implements SerialPortEventListener{
 					byte[] resultCrc16 = colected.getCrc16();
 					byte[] calculatedCRC = CRC16.calcularCRC(colected.retrieveContentWithoutCRC());
 
-					
 					// Verifica CRC
 					if (ByteUtil.compare(resultCrc16, calculatedCRC)) {
 
@@ -48,9 +47,9 @@ public class Reader extends Thread {// implements SerialPortEventListener{
 							if (ByteUtil.compare(identification, colected.getDestination())) {
 
 								Frame ackAnswer = colected.ack();
-	                            this.outputStream.write(ackAnswer.retrieveContent());
+								this.outputStream.write(ackAnswer.retrieveContent());
 								this.outputStream.flush();
-								// System.out.println("READ -> "+parsedResult);
+								System.out.println("READ -> " + new String(colected.getPayload()));
 
 							}
 
@@ -64,15 +63,5 @@ public class Reader extends Thread {// implements SerialPortEventListener{
 			e.printStackTrace();
 		}
 	}
-
-	//
-	// @Override
-	// public void serialEvent(SerialPortEvent arg0) {
-	// switch(arg0.getEventType()){
-	// case SerialPortEvent.DATA_AVAILABLE:
-	// this.start();
-	// break;
-	// }
-	// }
 
 }
