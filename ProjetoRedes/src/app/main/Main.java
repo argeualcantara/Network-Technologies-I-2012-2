@@ -6,6 +6,7 @@ import gnu.io.SerialPort;
 import app.comunicacao.Connector;
 import app.comunicacao.Reader;
 import app.comunicacao.Writer;
+import app.comunicacao.WriterDaemon;
 import app.domain.EstablishedConnection;
 import app.protocol.Frame;
 import app.protocol.parser.CoolProtocolParser;
@@ -43,8 +44,9 @@ public class Main {
 
 			Frame packetResult = CoolProtocolParser.parseTo(destination.getBytes(), source.getBytes(), groupID, message.getBytes());
 
-			writer.write(packetResult.retrieveContent());
+//			writer.write(packetResult.retrieveContent());
 			reader.start();
+			new WriterDaemon(writerConnection,packetResult.retrieveContent(),4, 5).startDaemon();
 		}
 
 	}
