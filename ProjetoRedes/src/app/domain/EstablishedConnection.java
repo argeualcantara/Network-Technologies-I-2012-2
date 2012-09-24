@@ -1,10 +1,12 @@
 package app.domain;
 
+import gnu.io.SerialPort;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 
 public class EstablishedConnection {
-
+	private final SerialPort porta;
 	private final String portName;
 	private final InputStream inputStream;
 	private final OutputStream outputStream;
@@ -12,7 +14,8 @@ public class EstablishedConnection {
 	private final byte[] identification;
 
 	public EstablishedConnection(String portName, InputStream inputStream, OutputStream outputStream, byte groupID,
-			byte[] identification) {
+			byte[] identification, SerialPort porta) {
+		this.porta = porta;
 		this.portName = portName;
 		this.inputStream = inputStream;
 		this.outputStream = outputStream;
@@ -38,6 +41,10 @@ public class EstablishedConnection {
 
 	public byte[] getIdentification() {
 		return identification;
+	}
+
+	public SerialPort getPorta() {
+		return porta;
 	}
 
 }

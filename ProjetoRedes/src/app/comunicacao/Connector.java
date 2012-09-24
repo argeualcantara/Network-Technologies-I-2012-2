@@ -3,7 +3,11 @@ package app.comunicacao;
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
+
+import java.io.IOException;
+
 import app.domain.EstablishedConnection;
+import app.main.MainWindow;
 
 public class Connector {
 
@@ -23,7 +27,7 @@ public class Connector {
 							SerialPort.PARITY_NONE);
 
 					return new EstablishedConnection(portName, serialPort.getInputStream(),
-							serialPort.getOutputStream(), groupID, name.getBytes());
+							serialPort.getOutputStream(), groupID, name.getBytes(), serialPort);
 				} else {
 					System.out.println("Error: Only serial ports are handled by this example.");
 				}
@@ -32,5 +36,19 @@ public class Connector {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static void disconnect() throws IOException {
+//		MainWindow.readerConnection.getInputStream().close();
+//		MainWindow.readerConnection.getOutputStream().close();
+		if(MainWindow.readerConnection != null && MainWindow.readerConnection.getPorta()!= null){
+			MainWindow.readerConnection.getPorta().close();
+		}
+		
+//		MainWindow.writerConnection.getInputStream().close();
+//		MainWindow.writerConnection.getOutputStream().close();
+		if(MainWindow.writerConnection != null && MainWindow.readerConnection.getPorta()!= null){
+			MainWindow.writerConnection.getPorta().close();
+		}
 	}
 }
