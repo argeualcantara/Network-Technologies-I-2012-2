@@ -50,7 +50,7 @@ public class Reader extends Thread {// implements SerialPortEventListener{
 								this.outputStream.write(ackAnswer.retrieveContent());
 								this.outputStream.flush();
 								MainWindow.mensagemTemp = MainWindow.mensagemTemp+new String(colected.getPayload());
-								MainWindow.logger.setText("READ -> " + new String(colected.getPayload()) +
+								MainWindow.logger.setText("MSG Recieved -> " + new String(colected.getPayload()) +
 															"\n"+MainWindow.logger.getText());
 
 							}

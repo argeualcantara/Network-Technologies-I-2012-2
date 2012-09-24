@@ -1,5 +1,6 @@
 package app.protocol.parser;
 
+import app.main.MainWindow;
 import app.protocol.Frame;
 
 public class CoolProtocolParser {
@@ -9,10 +10,13 @@ public class CoolProtocolParser {
 
 		// do the magic to create a frame packet
 		Frame parsed = new Frame(destination, source, groupID, payload);
-		parsed.setMessageID((byte) 0x01);
+		parsed.setMessageID((byte) 0x04);
 		parsed.setPayloadLength(new Integer(payload.length).byteValue());
-
-		parsed.setCrc16(app.utils.CRC16.calcularCRC(parsed.retrieveContentWithoutCRC()));
+		if(MainWindow.erroCrc){
+			parsed.setCrc16(new byte [] {0x0f,0x0f});
+		}else{
+			parsed.setCrc16(app.utils.CRC16.calcularCRC(parsed.retrieveContentWithoutCRC()));
+		}
         // TODO - criar na classe frame o metodo que devolve o conteudo concatenado em um so array de byte
 		
 		return parsed;
