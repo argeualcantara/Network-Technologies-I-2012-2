@@ -89,43 +89,32 @@ public class Frame {
 	}
 
 	public byte[] retrieveContent() {
-
 		List<Byte> content = new ArrayList<Byte>();
-
 		for (int i = 0; i < destination.length; i++) {
 			content.add(destination[i]);
 		}
-
 		content.add(messageID);
 		content.add(groupID);
 		content.add(payloadLength);
-
 		for (int i = 0; i < source.length; i++) {
 			content.add(source[i]);
 		}
-
 		if (payload != null) {
 			
 			for (int i = 0; i < payload.length; i++) {
 				content.add(payload[i]);
 			}
 		}
-
 		if (crc16 != null) {
-
 			for (int i = 0; i < crc16.length; i++) {
 				content.add(crc16[i]);
 			}
 		}
-
 		Object[] result = content.toArray();
-
 		byte[] toReturn = new byte[result.length];
-
 		for (int i = 0; i < toReturn.length; i++) {
 			toReturn[i] = (Byte) result[i];
 		}
-
 		return toReturn;
 	}
 

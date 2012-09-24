@@ -6,12 +6,14 @@ import gnu.io.SerialPort;
 
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
 import app.domain.EstablishedConnection;
 import app.main.MainWindow;
 
 public class Connector {
 
-	public EstablishedConnection connect(String portName, byte groupID, String name) {
+	public EstablishedConnection connect(String portName, byte groupID, String name, int palavra, int paridade, int stopbit, int taxa) {
 
 		CommPortIdentifier portIdentifier;
 
@@ -23,8 +25,7 @@ public class Connector {
 				CommPort commPort = portIdentifier.open(Connector.class.getName(), 2000);
 				if (commPort instanceof SerialPort) {
 					SerialPort serialPort = (SerialPort) commPort;
-					serialPort.setSerialPortParams(57600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
-							SerialPort.PARITY_NONE);
+					serialPort.setSerialPortParams(taxa, palavra, stopbit, paridade);
 
 					return new EstablishedConnection(portName, serialPort.getInputStream(),
 							serialPort.getOutputStream(), groupID, name.getBytes(), serialPort);
@@ -33,7 +34,8 @@ public class Connector {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(MainWindow.getFrames()[0], "Porta não existe ou já está em uso!");
+			//e.printStackTrace();
 		}
 		return null;
 	}

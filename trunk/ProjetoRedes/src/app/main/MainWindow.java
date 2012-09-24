@@ -10,9 +10,12 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -35,6 +38,7 @@ public class MainWindow extends JFrame implements ActionListener{
 	public static JTextField groupIdDestination;
 	public static JTextField tentativas;
 	public static JTextField mensagem;
+	public static JTextField taxa;
 	public static JTextArea logger;
 	public static JTextArea mensagemRecebida;
 	public static String mensagemTemp;
@@ -47,110 +51,185 @@ public class MainWindow extends JFrame implements ActionListener{
 	public static WriterDaemon writer;
 	public static JPanel painel;
 	public static FrameRender render;
+	public static JButton erro;
+	public static JComboBox palavra;
+	public static JComboBox paridade;
+	public static JComboBox stopBit;
 	
 	public void init(){
 		painel = new JPanel(new GridBagLayout());
 		GridBagConstraints layout = new GridBagConstraints();
 		layout.insets = new Insets(4,4,4,4);
-		
+		int gridY = 1;
 		layout.gridx = 0;
-		layout.gridy = 1;
+		layout.gridy = gridY;
 		JLabel port1 = new JLabel("Porta 1: ");
 		painel.add(port1,layout);
 		
 		layout.gridx = 1;
-		layout.gridy = 1;
+		layout.gridy = gridY;
 		porta1 = new JTextField("COM1");
 		porta1.setSize(45, 19);
 		porta1.setPreferredSize(porta1.getSize());
 		painel.add(porta1, layout);
 		
+		gridY++;
 		layout.gridx = 0;
-		layout.gridy = 2;
+		layout.gridy = gridY;
 		JLabel port2 = new JLabel("Porta 2: ");
 		painel.add(port2, layout);
 		
 		layout.gridx = 1;
-		layout.gridy = 2;
+		layout.gridy = gridY;
 		porta2 = new JTextField("COM2");
 		porta2.setSize(45, 19);
 		porta2.setPreferredSize(porta2.getSize());
 		painel.add(porta2, layout);
 		
+		gridY++;
+		
 		layout.gridx = 0;
-		layout.gridy = 3;
+		layout.gridy = gridY;
+		JLabel taxaLabel = new JLabel("Taxa de transmissão: ");
+		painel.add(taxaLabel, layout);
+		
+		layout.gridx = 1;
+		layout.gridy = gridY;
+		taxa = new JTextField("57600");
+		taxa.setSize(50, 19);
+		taxa.setPreferredSize(taxa.getSize());
+		painel.add(taxa, layout);
+		
+		gridY++;
+		
+		layout.gridx = 0;
+		layout.gridy = gridY;
+		JLabel palavraLabel = new JLabel("Palavra: ");
+		painel.add(palavraLabel, layout);
+		
+		layout.gridx = 1;
+		layout.gridy = gridY;
+		palavra = new JComboBox();
+		palavra.addItem("8bits");
+		palavra.addItem("7bits");
+		palavra.addItem("6bits");
+		palavra.setSize(55, 19);
+		palavra.setPreferredSize(palavra.getSize());
+		painel.add(palavra, layout);
+		
+		gridY++;
+		
+		layout.gridx = 0;
+		layout.gridy = gridY;
+		JLabel paridadeLabel = new JLabel("Paridade: ");
+		painel.add(paridadeLabel, layout);
+		
+		layout.gridx = 1;
+		layout.gridy = gridY;
+		paridade = new JComboBox();
+		paridade.addItem("NONE");
+		paridade.addItem("EVEN");
+		paridade.addItem("ODD");
+		paridade.setSize(60, 19);
+		paridade.setPreferredSize(paridade.getSize());
+		painel.add(paridade, layout);
+		
+		gridY++;
+		
+		layout.gridx = 0;
+		layout.gridy = gridY;
+		JLabel sotibitLabel = new JLabel("StopBit: ");
+		painel.add(sotibitLabel, layout);
+		
+		layout.gridx = 1;
+		layout.gridy = gridY;
+		stopBit = new JComboBox();
+		stopBit.addItem("1bit");
+		stopBit.addItem("2bits");
+		stopBit.setSize(60, 19);
+		stopBit.setPreferredSize(stopBit.getSize());
+		painel.add(stopBit, layout);
+		
+		gridY++;
+		
+		layout.gridx = 0;
+		layout.gridy = gridY;
 		JLabel labelTO = new JLabel("Timeout(s): ");
 		painel.add(labelTO, layout);
 		
 		layout.gridx = 1;
-		layout.gridy = 3;
+		layout.gridy = gridY;
 		timeOut = new JTextField("3");
 		timeOut.setSize(40, 19);
 		timeOut.setPreferredSize(timeOut.getSize());
 		painel.add(timeOut, layout);
 		
+		gridY++;
+		
 		layout.gridx = 0;
-		layout.gridy = 4;
+		layout.gridy = gridY;
 		JLabel labelNPayload = new JLabel("Payload Size(N): ");
 		painel.add(labelNPayload, layout);
 		
 		layout.gridx = 1;
-		layout.gridy = 4;
+		layout.gridy = gridY;
 		payload = new JTextField("10");
 		payload.setSize(40, 19);
 		payload.setPreferredSize(payload.getSize());
 		painel.add(payload, layout);
 		
+		gridY++;
+		
 		layout.gridx = 0;
-		layout.gridy = 5;
+		layout.gridy = gridY;
 		JLabel labelTries = new JLabel("Tentativas(M): ");
 		painel.add(labelTries, layout);
 		
 		layout.gridx = 1;
-		layout.gridy = 5;
+		layout.gridy = gridY;
 		tentativas = new JTextField("2");
 		tentativas.setSize(40, 19);
 		tentativas.setPreferredSize(tentativas.getSize());
 		painel.add(tentativas, layout);
-		
+		gridY++;
 		layout.gridx = 0;
-		layout.gridy = 6;
+		layout.gridy = gridY;
 		JLabel labelGIDSource = new JLabel("Group ID Source: ");
 		painel.add(labelGIDSource, layout);
 		
 		layout.gridx = 1;
-		layout.gridy = 6;
+		layout.gridy = gridY;
 		groupIdSource = new JTextField("1");
 		groupIdSource.setSize(40, 19);
 		groupIdSource.setPreferredSize(groupIdSource.getSize());
 		painel.add(groupIdSource, layout);
-		
+		gridY++;
 		layout.gridx = 0;
-		layout.gridy = 7;
+		layout.gridy = gridY;
 		JLabel labelGIDDstination = new JLabel("Group ID Destination: ");
 		painel.add(labelGIDDstination, layout);
 		
 		layout.gridx = 1;
-		layout.gridy = 7;
+		layout.gridy = gridY;
 		groupIdDestination = new JTextField("1");
 		groupIdDestination.setSize(40, 19);
 		groupIdDestination.setPreferredSize(groupIdDestination.getSize());
 		painel.add(groupIdDestination, layout);
-		
+		gridY++;
 		layout.gridx = 0;
-		layout.gridy = 8;
+		layout.gridy = gridY;
 		JLabel labelMessage = new JLabel("Mensagem: ");
 		painel.add(labelMessage, layout);
 		
 		layout.gridx = 1;
-		layout.gridy = 8;
+		layout.gridy = gridY;
 		mensagem = new JTextField("TESTE 2 por que é legal");
 		mensagem.setSize(180, 19);
 		mensagem.setPreferredSize(mensagem.getSize());
 		painel.add(mensagem, layout);
-		
+		gridY++;
 		layout.gridx = 1;
-		layout.gridy = 9;
+		layout.gridy = gridY;
 		JButton enviar = new JButton("Enviar");
 		enviar.addActionListener(this);
 		enviar.setActionCommand("enviar");
@@ -159,7 +238,16 @@ public class MainWindow extends JFrame implements ActionListener{
 		painel.add(enviar, layout);
 		
 		layout.gridx = 0;
-		layout.gridy = 10;
+		layout.gridy = gridY;
+		erro = new JButton("Add Erro");
+		erro.addActionListener(this);
+		erro.setActionCommand("erroCRC");
+		erro.setSize(110, 19);
+		erro.setPreferredSize(erro.getSize());
+		painel.add(erro, layout);
+		gridY++;
+		layout.gridx = 0;
+		layout.gridy = gridY;
 		layout.gridwidth = 3;
 		logger = new JTextArea("-------LOG-------");
 		logger.setSize(400, 100);
@@ -173,7 +261,7 @@ public class MainWindow extends JFrame implements ActionListener{
 		
 		layout.gridx = 2;
 		layout.gridy = 0;
-		layout.gridheight = 10;
+		layout.gridheight = gridY;
 		mensagemRecebida = new JTextArea("-------Mensagens Recebidas-------");
 		mensagemRecebida.setSize(300, 400);
 		mensagemRecebida.setEditable(false);
@@ -206,7 +294,9 @@ public class MainWindow extends JFrame implements ActionListener{
 			}
 		});  
 		this.add(painel);
-		this.setBounds(250, 100, 800, 600);
+		this.setIconImage(new ImageIcon(getClass().getResource("/img/leao.jpg").toString().substring(6)).getImage());
+		this.setTitle("Protocolo Tricolor");
+		this.setBounds(250, 30, 800, 700);
 		this.setResizable(false);
 		this.setVisible(true);
 	}
@@ -221,13 +311,33 @@ public class MainWindow extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("enviar")){
 			iniciarConexao();
-		}
+		}else
+			if(e.getActionCommand().equals("erroCRC")){
+				if(!erroCrc){
+					erroCrc = true;
+					erro.setText("ERRO ["+erroCrc+"]");
+				}else{
+					erroCrc = false;
+					erro.setText("ERRO ["+erroCrc+"]");
+				}
+			}
 		
 	}
 
 	public void iniciarConexao() {
-		render = new FrameRender();
-		render.execute();
+		if(Integer.parseInt(payload.getText()) > 255){
+			JOptionPane.showMessageDialog(this, "Payload deve ter no máximo 255 caracteres.");
+		}else
+		if(groupIdDestination.getText().length() > 1 ){
+			JOptionPane.showMessageDialog(this, "O groupID do destination deve conter apenas 1 caractere.");
+		}else
+		if(groupIdSource.getText().length() > 1 ){
+			JOptionPane.showMessageDialog(this, "O groupID do source deve conter apenas 1 caractere.");
+		}
+		else{
+			render = new FrameRender();
+			render.execute();
+		}
 		
 	}
 	

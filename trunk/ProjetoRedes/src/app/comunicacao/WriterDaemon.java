@@ -24,6 +24,7 @@ public class WriterDaemon extends Thread {
 		this.inputStream = connection.getInputStream();
 		this.outputStream = connection.getOutputStream();
 		this.frames = frames;
+		this.tries = 0;
 		this.secondsTimeout = secondsTimeout * 1000;
 		this.maxTries = maxTries;
 	}
@@ -42,13 +43,14 @@ public class WriterDaemon extends Thread {
 
 			while (!frames.isEmpty() | (!gotAck() && tries < maxTries)  ) {
 				tries++;
-				
-				
 				outputStream.write(frameToSend.retrieveContent());
 				outputStream.flush();
 				MainWindow.logger.setText("Tentando enviar o pacote pela " + tries + " vez.\n"+
 						MainWindow.logger.getText());
 				Thread.sleep(secondsTimeout);
+				if(tries >= maxTries){
+					break;
+				}
 
 			}
 
