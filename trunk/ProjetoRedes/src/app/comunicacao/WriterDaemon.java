@@ -56,10 +56,9 @@ public class WriterDaemon extends Thread {
 
 			if(frames.isEmpty()){
 				stopListening();
-				MainWindow.mensagemRecebida.setText(MainWindow.mensagemTemp+"\n"+
-						MainWindow.mensagemRecebida.getText());
-				MainWindow.logger.setText("Todos os pacotes foram enviados!\n"+
-						MainWindow.logger.getText());
+				MainWindow.mensagemRecebida.setText(MainWindow.mensagemTemp+"\n"+MainWindow.mensagemRecebida.getText());
+				
+				MainWindow.logger.setText("Todos os pacotes foram enviados!\n"+MainWindow.logger.getText());
 			}
 
 			if (tries == maxTries && !gotAck()) {
