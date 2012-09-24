@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import app.domain.EstablishedConnection;
+import app.main.MainWindow;
 import app.protocol.Frame;
 import app.utils.ByteUtil;
 import app.utils.CRC16;
@@ -27,7 +28,7 @@ public class Reader extends Thread {// implements SerialPortEventListener{
 	@Override
 	public void run() {
 		try {
-			while (true) {
+			while (MainWindow.runReader) {
 				byte[] buffer = new byte[this.inputStream.available()];
 				this.inputStream.read(buffer);
 				if (buffer.length > 0) {
@@ -48,7 +49,9 @@ public class Reader extends Thread {// implements SerialPortEventListener{
 								Frame ackAnswer = colected.ack();
 								this.outputStream.write(ackAnswer.retrieveContent());
 								this.outputStream.flush();
-								System.out.println("READ -> " + new String(colected.getPayload()));
+								MainWindow.mensagemTemp = MainWindow.mensagemTemp+new String(colected.getPayload());
+								MainWindow.logger.setText("READ -> " + new String(colected.getPayload()) +
+															"\n"+MainWindow.logger.getText());
 
 							}
 

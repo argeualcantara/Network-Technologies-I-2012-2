@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.util.LinkedList;
 
 import app.domain.EstablishedConnection;
+import app.main.MainWindow;
 import app.protocol.Frame;
 
 public class WriterDaemon extends Thread {
@@ -45,19 +46,24 @@ public class WriterDaemon extends Thread {
 				
 				outputStream.write(frameToSend.retrieveContent());
 				outputStream.flush();
-				System.out.println("Tentando enviar o pacote pela " + tries + " vez.");
+				MainWindow.logger.setText("Tentando enviar o pacote pela " + tries + " vez.\n"+
+						MainWindow.logger.getText());
 				Thread.sleep(secondsTimeout);
 
 			}
 
 			if(frames.isEmpty()){
 				stopListening();
-				System.out.println("Todos os pacotes foram enviados!");
+				MainWindow.mensagemRecebida.setText(MainWindow.mensagemTemp+"\n"+
+						MainWindow.mensagemRecebida.getText());
+				MainWindow.logger.setText("Todos os pacotes foram enviados!\n"+
+						MainWindow.logger.getText());
 			}
 
 			if (tries == maxTries && !gotAck()) {
 				stopListening();
-				System.out.println("[FALHA] Pacote foi enviado " + tries + " vezes, sem sucesso!");
+				MainWindow.logger.setText("[FALHA] Pacote foi enviado " + tries + " vezes, sem sucesso!\n"+
+						MainWindow.logger.getText());
 
 			} 
 //				
@@ -96,7 +102,8 @@ public class WriterDaemon extends Thread {
 
 		boolean hasAck = ack != null && ack.length > 0;
 			if(hasAck){
-				System.out.println("[OK] Pacote enviado com sucesso, com " + tries + " tentativas.");
+				MainWindow.logger.setText("[OK] Pacote enviado com sucesso, com " + tries + " tentativas.\n"+
+						MainWindow.logger.getText());
 				tries = 0;
 				frameToSend = frames.poll();
 			}
