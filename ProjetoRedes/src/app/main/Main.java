@@ -1,15 +1,9 @@
 package app.main;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
-import gnu.io.CommPort;
-import gnu.io.CommPortIdentifier;
-import gnu.io.SerialPort;
 import app.comunicacao.Connector;
 import app.comunicacao.Reader;
-import app.comunicacao.Writer;
 import app.comunicacao.WriterDaemon;
 import app.domain.EstablishedConnection;
 import app.protocol.Frame;
@@ -37,7 +31,7 @@ public class Main {
 
 			Reader reader = new Reader(readerConnection);
 
-			Writer writer = new Writer(writerConnection);
+//			Writer writer = new Writer(writerConnection);
 			// try{
 			// CommPortIdentifier cpi =
 			// CommPortIdentifier.getPortIdentifier(portReader);
@@ -51,7 +45,7 @@ public class Main {
 			// Informado pelo usuario
 			reader.start();
 
-			String message = "TESTE1TESTE2TESTE3TESTE4TESTE5";
+			String message = "TESTE1 TESTE2 TESTE3 TESTE4 TESTE5";
 
 			LinkedList<Frame> frames = retrieveFramesFromMessage(message);
 //
@@ -91,14 +85,16 @@ public class Main {
 		packetsQuantity = packetsQuantity + (rest > 0 ? 1 : 0);
 		
 		for(int i=0; i<packetsQuantity ; i++){
-			byte[] payload = ByteUtil.retrievePartOfContent(totalBytes, i*payloadMaxSize, i*payloadMaxSize + payloadMaxSize-1);
-			Frame currentFrame = CoolProtocolParser.parseTo(destination.getBytes(), source.getBytes(), groupIDWriter, payload);
-			
-			
+			Frame currentFrame = null;
+			if(i == packetsQuantity-1){
+				byte[] payload = ByteUtil.retrievePartOfContent(totalBytes, i*payloadMaxSize, i*payloadMaxSize + rest -1);
+				currentFrame = CoolProtocolParser.parseTo(destination.getBytes(), source.getBytes(), groupIDWriter, payload);
+			}else{
+				byte[] payload = ByteUtil.retrievePartOfContent(totalBytes, i*payloadMaxSize, i*payloadMaxSize + payloadMaxSize-1);
+				currentFrame = CoolProtocolParser.parseTo(destination.getBytes(), source.getBytes(), groupIDWriter, payload);
+			}
 			toResult.add(currentFrame);
-			
 		}
-
 		return toResult;
 	}
 }
