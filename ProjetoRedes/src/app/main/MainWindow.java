@@ -36,6 +36,8 @@ public class MainWindow extends JFrame implements ActionListener{
 	public static JTextField payload;
 	public static JTextField groupIdSource;
 	public static JTextField groupIdDestination;
+	public static JTextField idDestination;
+	public static JTextField idSource;
 	public static JTextField tentativas;
 	public static JTextField mensagem;
 	public static JTextField taxa;
@@ -52,6 +54,7 @@ public class MainWindow extends JFrame implements ActionListener{
 	public static JPanel painel;
 	public static FrameRender render;
 	public static JButton erro;
+	public static JButton disconnect;
 	public static JComboBox palavra;
 	public static JComboBox paridade;
 	public static JComboBox stopBit;
@@ -191,7 +194,9 @@ public class MainWindow extends JFrame implements ActionListener{
 		tentativas.setSize(40, 19);
 		tentativas.setPreferredSize(tentativas.getSize());
 		painel.add(tentativas, layout);
+		
 		gridY++;
+		
 		layout.gridx = 0;
 		layout.gridy = gridY;
 		JLabel labelGIDSource = new JLabel("Group ID Source: ");
@@ -203,7 +208,9 @@ public class MainWindow extends JFrame implements ActionListener{
 		groupIdSource.setSize(40, 19);
 		groupIdSource.setPreferredSize(groupIdSource.getSize());
 		painel.add(groupIdSource, layout);
+		
 		gridY++;
+		
 		layout.gridx = 0;
 		layout.gridy = gridY;
 		JLabel labelGIDDstination = new JLabel("Group ID Destination: ");
@@ -215,7 +222,37 @@ public class MainWindow extends JFrame implements ActionListener{
 		groupIdDestination.setSize(40, 19);
 		groupIdDestination.setPreferredSize(groupIdDestination.getSize());
 		painel.add(groupIdDestination, layout);
+		
+//		gridY++;
+//		
+//		layout.gridx = 0;
+//		layout.gridy = gridY;
+//		JLabel labelIDDestination = new JLabel("ID Destination: ");
+//		painel.add(labelIDDestination, layout);
+//		
+//		layout.gridx = 1;
+//		layout.gridy = gridY;
+//		idDestination = new JTextField("JO");
+//		idDestination.setSize(40, 19);
+//		idDestination.setPreferredSize(idDestination.getSize());
+//		painel.add(idDestination, layout);
+//		
+//		gridY++;
+//		
+//		layout.gridx = 0;
+//		layout.gridy = gridY;
+//		JLabel labelIDSource = new JLabel("ID Source: ");
+//		painel.add(labelIDSource, layout);
+//		
+//		layout.gridx = 1;
+//		layout.gridy = gridY;
+//		idSource = new JTextField("ZE");
+//		idSource.setSize(40, 19);
+//		idSource.setPreferredSize(idSource.getSize());
+//		painel.add(idSource, layout);
+		
 		gridY++;
+		
 		layout.gridx = 0;
 		layout.gridy = gridY;
 		JLabel labelMessage = new JLabel("Mensagem: ");
@@ -227,15 +264,8 @@ public class MainWindow extends JFrame implements ActionListener{
 		mensagem.setSize(180, 19);
 		mensagem.setPreferredSize(mensagem.getSize());
 		painel.add(mensagem, layout);
+		
 		gridY++;
-		layout.gridx = 1;
-		layout.gridy = gridY;
-		JButton enviar = new JButton("Enviar");
-		enviar.addActionListener(this);
-		enviar.setActionCommand("enviar");
-		enviar.setSize(80, 19);
-		enviar.setPreferredSize(enviar.getSize());
-		painel.add(enviar, layout);
 		
 		layout.gridx = 0;
 		layout.gridy = gridY;
@@ -245,7 +275,29 @@ public class MainWindow extends JFrame implements ActionListener{
 		erro.setSize(110, 19);
 		erro.setPreferredSize(erro.getSize());
 		painel.add(erro, layout);
+
+		layout.gridx = 1;
+		layout.gridy = gridY;
+		JButton enviar = new JButton("Enviar");
+		enviar.addActionListener(this);
+		enviar.setActionCommand("enviar");
+		enviar.setSize(80, 19);
+		enviar.setPreferredSize(enviar.getSize());
+		painel.add(enviar, layout);
+		
 		gridY++;
+		
+		layout.gridx = 0;
+		layout.gridy = gridY;
+		disconnect = new JButton("Disconnect");
+		disconnect.addActionListener(this);
+		disconnect.setActionCommand("desconectar");
+		disconnect.setSize(110, 19);
+		disconnect.setPreferredSize(disconnect.getSize());
+		painel.add(disconnect, layout);
+		
+		gridY++;
+		
 		layout.gridx = 0;
 		layout.gridy = gridY;
 		layout.gridwidth = 3;
@@ -253,7 +305,7 @@ public class MainWindow extends JFrame implements ActionListener{
 		logger.setSize(400, 100);
 		logger.setPreferredSize(logger.getSize());
 		logger.setEditable(false);
-		logger.setColumns(40);
+		logger.setColumns(400);
 		logger.setRows(200);
 		JScrollPane paineScrollLog = new JScrollPane(logger);
 		paineScrollLog.setPreferredSize(logger.getSize());
@@ -265,6 +317,8 @@ public class MainWindow extends JFrame implements ActionListener{
 		mensagemRecebida = new JTextArea("-------Mensagens Recebidas-------");
 		mensagemRecebida.setSize(300, 400);
 		mensagemRecebida.setEditable(false);
+		mensagemRecebida.setRows(200);
+		mensagemRecebida.setColumns(400);
 		mensagemRecebida.setPreferredSize(mensagemRecebida.getSize());
 		JScrollPane paineScrollMsg = new JScrollPane(mensagemRecebida);
 		paineScrollMsg.setPreferredSize(mensagemRecebida.getSize());
@@ -319,6 +373,14 @@ public class MainWindow extends JFrame implements ActionListener{
 				}else{
 					erroCrc = false;
 					erro.setText("ERRO ["+erroCrc+"]");
+				}
+			} else if (e.getActionCommand().equals("desconectar")){
+				try {
+					Connector.disconnect();
+					connected = false;
+					JOptionPane.showMessageDialog(this, "Conexão interrrompida com sucesso.");
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(this, "Falha ao interromper a conexão");
 				}
 			}
 		

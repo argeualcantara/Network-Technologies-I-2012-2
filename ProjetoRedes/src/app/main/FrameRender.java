@@ -31,8 +31,8 @@ public class FrameRender extends SwingWorker<Void, Void>{
 		int timeout = Integer.parseInt(MainWindow.timeOut.getText());
 		MainWindow.logger.setText("Iniciando Transmissão.\n"+MainWindow.logger.getText());
 		if(MainWindow.connected){
-			Connector.disconnect();
-			MainWindow.connected = false;
+//			Connector.disconnect();
+//			MainWindow.connected = false;
 		}
 		int taxa = Integer.parseInt(MainWindow.taxa.getText());
 		if(!MainWindow.connected){
