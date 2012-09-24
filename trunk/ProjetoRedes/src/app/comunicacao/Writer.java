@@ -4,17 +4,16 @@ import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import app.domain.EstablishedConnection;
 
 public class Writer implements SerialPortEventListener {
-	private final InputStream inputStream;
+	//private final InputStream inputStream;
 	private final OutputStream outputStream;
 
 	public Writer(EstablishedConnection connection) {
-		this.inputStream = connection.getInputStream();
+	//	this.inputStream = connection.getInputStream();
 		this.outputStream = connection.getOutputStream();
 	}
 	

@@ -6,7 +6,6 @@ import java.io.OutputStream;
 
 import app.domain.EstablishedConnection;
 import app.protocol.Frame;
-import app.protocol.parser.CoolProtocolParser;
 import app.utils.ByteUtil;
 import app.utils.CRC16;
 

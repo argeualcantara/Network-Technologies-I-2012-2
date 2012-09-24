@@ -1,6 +1,5 @@
 package app.protocol.parser;
 
-import app.utils.CRC16;
 import app.protocol.Frame;
 
 public class CoolProtocolParser {
