@@ -43,6 +43,14 @@ public class WriterDaemon extends Thread {
 
 			while (!frames.isEmpty() | (!gotAck() && tries < maxTries)  ) {
 				tries++;
+				
+				// on the fly activation error
+//				if(MainWindow.erroCrc){
+//					byte[] originalContent = frameToSend.retrieveContent();
+//					originalContent[originalContent.length-1] = 0x0f;
+//					originalContent[originalContent.length-2] = 0x0f;
+//				}
+				
 				outputStream.write(frameToSend.retrieveContent());
 				outputStream.flush();
 				MainWindow.logger.setText("Tentando enviar o pacote pela " + tries + " vez.\n"+

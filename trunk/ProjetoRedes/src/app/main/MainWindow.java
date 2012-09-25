@@ -162,7 +162,7 @@ public class MainWindow extends JFrame implements ActionListener{
 		
 		layout.gridx = 1;
 		layout.gridy = gridY;
-		timeOut = new JTextField("3");
+		timeOut = new JTextField("1");
 		timeOut.setSize(40, 19);
 		timeOut.setPreferredSize(timeOut.getSize());
 		painel.add(timeOut, layout);
@@ -260,7 +260,7 @@ public class MainWindow extends JFrame implements ActionListener{
 		
 		layout.gridx = 1;
 		layout.gridy = gridY;
-		mensagem = new JTextField("TESTE 2 por que é legal");
+		mensagem = new JTextField("Teste de envio de mensagens usando o protocolo tricolor");
 		mensagem.setSize(180, 19);
 		mensagem.setPreferredSize(mensagem.getSize());
 		painel.add(mensagem, layout);
