@@ -1,45 +1,43 @@
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.zip.CRC32;
-import java.util.zip.CheckedInputStream;
 
 public class Server extends Thread {
 	public static final int PORT = 9999;
-	public static final int BUFFER_SIZE = 8192;
-	private FileSendTest test;
-	public Server(FileSendTest test) {
-		this.test = test;
-	}
+	public static final int BUFFER_SIZE = 1024;
 
 	public void run() {
 		ServerSocket server = null;
-		FileOutputStream out = null;
-		CheckedInputStream entrada = null;
+		OutputStream out = null;
+		InputStream entrada = null;
 		Socket socket = null;
-		File file = null;
 		try {
 			server = new ServerSocket(PORT);
 			socket = server.accept();
-			byte[] buffer = new byte[BUFFER_SIZE];
+			System.out.println("conexao aceita");
 			
-			entrada = new CheckedInputStream(socket.getInputStream(), new CRC32());
-			file = new File(File.separator + "home"+File.separator+"argeu"+
-								File.separator+"workspace"+File.separator+
-								"TrabalhoRedesNP2"+File.separator+"recieved" + File.separator
-					+ test.getFILE_NAME());
-			file.createNewFile();
-			
-			out = new FileOutputStream(file);
-			while ((entrada.read(buffer)) >= 0) {
-				out.write(buffer);
+			entrada = socket.getInputStream();
+			// write the inputStream to a FileOutputStream
+			 out = new FileOutputStream(new File(File.separator + "home"+File.separator+"thiagoponte"+
+						File.separator+"received"+File.separator+"file.mp4"));
+		 
+			int read = 0;
+			byte[] bytes = new byte[BUFFER_SIZE];
+		 
+			while ((read = entrada.read(bytes)) != -1) {
+				out.write(bytes, 0, read);
 			}
-			out.close();
+		 
 			entrada.close();
-			System.out.println(file.getPath());
-			System.out.println("Server CRC: "+Long.toHexString(entrada.getChecksum().getValue()));
+			out.flush();
+			out.close();
+			
+//			System.out.println(file.getPath());
+//			System.out.println("Server CRC: "+out.getChecksum().getValue());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally{
@@ -48,7 +46,6 @@ public class Server extends Thread {
 					out.flush();
 					out.close();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -56,7 +53,6 @@ public class Server extends Thread {
 				try {
 					socket.close();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -64,12 +60,15 @@ public class Server extends Thread {
 				try {
 					server.close();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 			System.out.println("Server out...");
 		}
+	}
+	public static void main(String[] args) {
+		Server server = new Server();
+		server.start();
 	}
 
 }
