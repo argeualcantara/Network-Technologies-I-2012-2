@@ -1,48 +1,40 @@
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Calendar;
 import java.util.zip.CRC32;
-import java.util.zip.CheckedOutputStream;
-
-import javax.swing.JFileChooser;
+import java.util.zip.CheckedInputStream;
 
 public class FileSendTest {
-	private String FILE_NAME;
-	public static void main(String[] args) {
-		FileSendTest test = new FileSendTest();
-		JFileChooser jfc = new JFileChooser();
-		jfc.setAcceptAllFileFilterUsed(true);
-		jfc.showOpenDialog(null);
+	public static void enviarArquivo(File fileToSend) {
 		Socket socket = null;
 		FileInputStream in = null;
-		CheckedOutputStream cout = null;
+		OutputStream out = null;
 		try {
-			File file = jfc.getSelectedFile();
-			if (file.canRead()) {
-				test.setFILE_NAME(file.getName());
-				Server s = new Server(test);
-				s.start();
+			if (fileToSend.canRead()) {
 				socket = new Socket("127.0.0.1",Server.PORT);
-				cout = new CheckedOutputStream(socket.getOutputStream(), new CRC32());
-				in = new FileInputStream(file);
+				long crc = calcularCrc(fileToSend);
+				System.out.println("Client CRC: "+crc);
+				out = socket.getOutputStream();
+				
+				in = new FileInputStream(fileToSend);
+				
 				byte[] buffer = new byte[Server.BUFFER_SIZE];
-				System.out.println(Calendar.getInstance().getTimeInMillis());
 				while (( in.read(buffer) )!= -1) {
-					cout.write(buffer);
+					out.write(buffer);
+					out.flush();
 				}
-				cout.close();
+				out.close();
 				in.close();
-				System.out.println(Calendar.getInstance().getTimeInMillis());
-				System.out.println("Client CRC: "+Long.toHexString(cout.getChecksum().getValue()));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally{
-			System.out.println("Clien Out...");
+			System.out.println("Client Out...");
 			try{
-				if(cout != null){
-					cout.close();
+				if(out != null){
+					out.close();
 				}
 				if(socket != null){
 					socket.close();
@@ -52,10 +44,14 @@ public class FileSendTest {
 			}
 		}
 	}
-	public String getFILE_NAME() {
-		return FILE_NAME;
-	}
-	public void setFILE_NAME(String fILE_NAME) {
-		FILE_NAME = fILE_NAME;
+	
+	private static long calcularCrc(File file) throws IOException {
+		CheckedInputStream cin = new CheckedInputStream(new FileInputStream(file), new CRC32());
+		byte[] buffer = new byte[Server.BUFFER_SIZE];
+		while(cin.read(buffer) != -1){
+			//utilizado para ler o arquivo
+		}
+		cin.close();
+		return cin.getChecksum().getValue();
 	}
 }
