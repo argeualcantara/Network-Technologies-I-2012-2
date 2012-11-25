@@ -85,11 +85,16 @@ public class HeaderUtils {
 		fileSize[1] = total[4];
 		fileSize[2] = total[5];
 		fileSize[3] = total[6];
-		int fileSIzeN = Integer.parseInt(new String(fileSize));
+		int fileSizevalue = 0;
+		for (int i = 0; i < fileSize.length; i++)
+		{
+			fileSizevalue = (fileSizevalue << 8) + (fileSize[i] & 0xff);
+		}
 		
-		byte [] file = new byte[fileSIzeN];
+		
+		byte [] file = new byte[fileSizevalue];
 		int j = 0;
-		for (int i = headerFinalPos; i < file.length; i++) {
+		for (int i = headerFinalPos; j < file.length -1; i++) {
 			file[j] = total[i];
 			j++;
 		}

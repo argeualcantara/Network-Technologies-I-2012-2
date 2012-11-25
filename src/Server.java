@@ -5,9 +5,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import org.omg.CORBA.DataOutputStream;
 
 import util.CRC16;
 
@@ -76,6 +79,7 @@ public class Server extends Thread {
 					+ "received" + File.separator + fileName));
 			
 			byte[] file = HeaderUtils.getFile(total);
+			
 			
 			out.write(file);
 			
