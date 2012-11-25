@@ -13,6 +13,9 @@ public class HeaderUtils {
 	public static final int CRC_POS_1 = 7;
 	public static final int CRC_POS_2 = 8;
 	
+	public static final int HEADER_LENGTH_POS_1 = 1;
+	public static final int HEADER_LENGTH_POS_2 = 2;
+	
 	/**
 	 * O nome do arquivo deve ser enviado com a extensão e o tamanho do arquivo.
 	 * @param fileName
@@ -60,5 +63,20 @@ public class HeaderUtils {
 			j++;
 		}
 		return this.header;
+	}
+	
+	public byte[] getFile(byte [] total){
+		byte [] headerSize = new byte [2];
+		headerSize[0] = total[HeaderUtils.HEADER_LENGTH_POS_1];
+		headerSize[1] = total[HeaderUtils.HEADER_LENGTH_POS_2];
+		int headerFinalPos = Integer.parseInt(new String(headerSize));
+		
+		byte [] file = new byte[total.length - headerFinalPos];
+		int j = 0;
+		for (int i = headerFinalPos; i < file.length; i++) {
+			file[j] = total[i];
+			j++;
+		}
+		return file;
 	}
 }
