@@ -65,6 +65,11 @@ public class HeaderUtils {
 		return this.header;
 	}
 	
+	/**
+	 * Método que retorna o nome do arquivo, é necessário passar a PDU completa.
+	 * @param total
+	 * @return
+	 */
 	public byte[] getFile(byte [] total){
 		byte [] headerSize = new byte [2];
 		headerSize[0] = total[HeaderUtils.HEADER_LENGTH_POS_1];
@@ -78,5 +83,25 @@ public class HeaderUtils {
 			j++;
 		}
 		return file;
+	}
+	
+	/**
+	 * Método que retorna o nome do arquivo, é necessário passar a PDU completa.
+	 * @param total
+	 * @return
+	 */
+	public String getFileName(byte[] total){
+		byte [] headerSize = new byte [2];
+		headerSize[0] = total[HeaderUtils.HEADER_LENGTH_POS_1];
+		headerSize[1] = total[HeaderUtils.HEADER_LENGTH_POS_2];
+		int headerFinalPos = Integer.parseInt(new String(headerSize));
+		int fileNameInitPos = 9;
+		
+		int j = 0;
+		byte[] fileName = new byte[headerFinalPos - fileNameInitPos];
+		for (int i = fileNameInitPos; i < headerFinalPos; i++) {
+			fileName[j] = total[i];
+		}
+		return new String(fileName);
 	}
 }
