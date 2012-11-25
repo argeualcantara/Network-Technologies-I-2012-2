@@ -15,6 +15,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JLabel;
 
 
 public class Window {
@@ -25,6 +26,7 @@ public class Window {
 	private JPanel panelServer = null;
 	private JFileChooser fileChooser = null;
 	private File fileToSend = null;
+	private JTextField savePath;
 	
 	/**
 	 * Launch the application.
@@ -84,10 +86,30 @@ public class Window {
 		JLayeredPane layeredPane = new JLayeredPane();
 		frame.getContentPane().add(layeredPane, BorderLayout.CENTER);
 		
+		panelServer = new JPanel();
+		panelServer.setBounds(0, 0, 725, 608);
+		layeredPane.add(panelServer);
+		panelServer.setLayout(null);
+		panelServer.setVisible(false);
+		
+		JButton btnEscolha = new JButton("Escolha");
+		btnEscolha.setBounds(287, 112, 117, 25);
+		panelServer.add(btnEscolha);
+		
+		JLabel lblEscolhaOndeOs = new JLabel("Escolha onde os arquivos serão armazenados:");
+		lblEscolhaOndeOs.setBounds(12, 30, 392, 15);
+		panelServer.add(lblEscolhaOndeOs);
+		
+		savePath = new JTextField();
+		savePath.setBounds(12, 112, 263, 25);
+		panelServer.add(savePath);
+		savePath.setColumns(10);
+		
 		panelClient = new JPanel();
 		panelClient.setBounds(0, 0, 725, 608);
 		layeredPane.add(panelClient);
 		panelClient.setLayout(null);
+		panelClient.setVisible(false);
 		
 		JButton btnArquivo = new JButton("Arquivo");
 		btnArquivo.addMouseListener(new MouseAdapter() {
@@ -120,12 +142,5 @@ public class Window {
 		});
 		buttonEnviar.setBounds(136, 68, 93, 23);
 		panelClient.add(buttonEnviar);
-		
-		panelServer = new JPanel();
-		panelServer.setBounds(0, 0, 725, 608);
-		layeredPane.add(panelServer);
-		
-		panelServer.setVisible(false);
-		panelClient.setVisible(false);
 	}
 }
