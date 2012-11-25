@@ -43,11 +43,11 @@ public class HeaderUtils {
 		this.header[1] = this.headerLength[0];
 		this.header[2] = this.headerLength[1];
 		
-		//tamanho do cabeçalho
+		//tamanho do arquivo
 		this.header[3] = this.fileLength[0];
-		this.header[4] = this.headerLength[1];
-		this.header[5] = this.headerLength[2];
-		this.header[6] = this.headerLength[3];
+		this.header[4] = this.fileLength[1];
+		this.header[5] = this.fileLength[2];
+		this.header[6] = this.fileLength[3];
 		
 		//crc
 		this.header[7] = 0x00;
