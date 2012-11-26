@@ -29,10 +29,14 @@ public class Window implements ActionListener{
 	private JFileChooser fileChooser = null;
 	private File fileToSend = null;
 	private JTextField savePath = null;
-	JProgressBar progressBar = null;
-	JButton btnStop = null;
-	JButton btnStart = null;
+	static JProgressBar progressBar = null;
+	static JButton btnStop = null;
+	static JButton btnStart = null;
 	static JTextArea logServer = null;
+	private JTextField serverPort;
+	private JTextField clientPort;
+	private JTextField bufferSize;
+	private JTextField ipDestino;
 	/**
 	 * Launch the application.
 	 */
@@ -84,6 +88,66 @@ public class Window implements ActionListener{
 		JLayeredPane layeredPane = new JLayeredPane();
 		frame.getContentPane().add(layeredPane, BorderLayout.CENTER);
 		
+		panelClient = new JPanel();
+		panelClient.setBounds(0, 0, 739, 634);
+		panelClient.setVisible(false);
+		layeredPane.add(panelClient);
+		panelClient.setLayout(null);
+		
+		JButton btnArquivo = new JButton("Arquivo");
+		btnArquivo.addActionListener(this);
+		btnArquivo.setActionCommand("chooseFileToSend");
+		
+		btnArquivo.setBounds(478, 11, 93, 23);
+		panelClient.add(btnArquivo);
+		
+		filePath = new JTextField();
+		filePath.setBounds(136, 12, 332, 20);
+		filePath.setEnabled(true);
+		panelClient.add(filePath);
+		filePath.setColumns(10);
+		
+		JButton buttonEnviar = new JButton("Enviar");
+		buttonEnviar.addActionListener(this);
+		buttonEnviar.setActionCommand("sendFile");
+		buttonEnviar.setBounds(136, 194, 93, 23);
+		panelClient.add(buttonEnviar);
+		
+		progressBar = new JProgressBar();
+		progressBar.setBounds(146, 252, 417, 36);
+		panelClient.add(progressBar);
+		
+		clientPort = new JTextField("9999");
+		clientPort.setBounds(136, 66, 114, 19);
+		panelClient.add(clientPort);
+		clientPort.setColumns(10);
+		
+		JLabel lblArquivo = new JLabel("Arquivo");
+		lblArquivo.setBounds(51, 11, 70, 15);
+		panelClient.add(lblArquivo);
+		
+		JLabel lblPort_1 = new JLabel("Port");
+		lblPort_1.setBounds(53, 65, 70, 15);
+		panelClient.add(lblPort_1);
+		
+		bufferSize = new JTextField("1024");
+		bufferSize.setBounds(136, 100, 114, 19);
+		panelClient.add(bufferSize);
+		bufferSize.setColumns(10);
+		
+		JLabel lblSegmentokb = new JLabel("Segmento (bytes)");
+		lblSegmentokb.setBounds(0, 97, 130, 20);
+		panelClient.add(lblSegmentokb);
+		
+		ipDestino = new JTextField();
+		ipDestino.setBounds(136, 35, 114, 19);
+		panelClient.add(ipDestino);
+		ipDestino.setColumns(10);
+		
+		JLabel lblIpDestino = new JLabel("IP Destino");
+		lblIpDestino.setBounds(25, 38, 96, 15);
+		panelClient.add(lblIpDestino);
+		
 		panelServer = new JPanel();
 		panelServer.setBounds(0, 0, 741, 634);
 		layeredPane.add(panelServer);
@@ -97,7 +161,7 @@ public class Window implements ActionListener{
 		panelServer.add(btnEscolha);
 		
 		JLabel lblEscolhaOndeOs = new JLabel("Escolha onde os arquivos serão armazenados:");
-		lblEscolhaOndeOs.setBounds(12, 30, 392, 15);
+		lblEscolhaOndeOs.setBounds(12, 90, 392, 15);
 		panelServer.add(lblEscolhaOndeOs);
 		
 		savePath = new JTextField();
@@ -131,34 +195,14 @@ public class Window implements ActionListener{
 		lblLog.setBounds(38, 248, 70, 15);
 		panelServer.add(lblLog);
 		
-		panelClient = new JPanel();
-		panelClient.setBounds(0, 0, 739, 634);
-		panelClient.setVisible(false);
-		layeredPane.add(panelClient);
-		panelClient.setLayout(null);
+		serverPort = new JTextField("9999");
+		serverPort.setBounds(147, 59, 114, 19);
+		panelServer.add(serverPort);
+		serverPort.setColumns(10);
 		
-		JButton btnArquivo = new JButton("Arquivo");
-		btnArquivo.addActionListener(this);
-		btnArquivo.setActionCommand("chooseFileToSend");
-		
-		btnArquivo.setBounds(478, 11, 93, 23);
-		panelClient.add(btnArquivo);
-		
-		filePath = new JTextField();
-		filePath.setBounds(136, 12, 332, 20);
-		filePath.setEnabled(true);
-		panelClient.add(filePath);
-		filePath.setColumns(10);
-		
-		JButton buttonEnviar = new JButton("Enviar");
-		buttonEnviar.addActionListener(this);
-		buttonEnviar.setActionCommand("sendFile");
-		buttonEnviar.setBounds(136, 68, 93, 23);
-		panelClient.add(buttonEnviar);
-		
-		progressBar = new JProgressBar();
-		progressBar.setBounds(154, 177, 417, 36);
-		panelClient.add(progressBar);
+		JLabel lblPort = new JLabel("Port");
+		lblPort.setBounds(72, 61, 70, 15);
+		panelServer.add(lblPort);
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -169,25 +213,17 @@ public class Window implements ActionListener{
 			panelClient.setVisible(false);
 			panelServer.setVisible(true);
 		}else if(e.getActionCommand().equals("sendFile")){
-			if(filePath.getText().trim().length() > 0){
-				FileSendTest.enviarArquivo(fileToSend);
-			}else{
-				JOptionPane.showMessageDialog(null, "Escolha um arquivo", "Aviso", JOptionPane.OK_OPTION);
+			if(filePath.getText().trim().length() > 0 && clientPort.getText().trim().length() > 0 
+					&& ipDestino.getText().trim().length() > 0 && bufferSize.getText().trim().length() > 0){
 				new Thread(){
 					public void run(){
-						int i = 0;
-						while(i <= 100){
-							try {
-								progressBar.setValue(i);
-								Thread.sleep(400);
-								i++;
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
+						FileSendTest.enviarArquivo(fileToSend, ipDestino.getText(), 
+								Integer.parseInt(clientPort.getText()), Integer.parseInt(bufferSize.getText()));
 					}
 				}.start();
+				
+			}else{
+				JOptionPane.showMessageDialog(null, "Preencha todos os campos", "Aviso", JOptionPane.OK_OPTION);
 			}
 		}else if(e.getActionCommand().equals("chooseFileToSend")){
 			fileChooser = new JFileChooser();
@@ -205,12 +241,12 @@ public class Window implements ActionListener{
 				savePath.setText(temp.getPath());
 			}
 		}else if(e.getActionCommand().equals("startServer")){
-			if(savePath.getText().trim().length() > 0){
+			if(savePath.getText().trim().length() > 0 && serverPort.getText().trim().length() > 0){
 				btnStop.setEnabled(true);
 				btnStart.setEnabled(false);
 				Server.startServer(savePath.getText());
 			}else{
-				JOptionPane.showMessageDialog(null, "Escolha o local de recebimento do arquivo.", "Aviso", JOptionPane.OK_OPTION);
+				JOptionPane.showMessageDialog(null, "Escolha o local de recebimento do arquivo e a porta.", "Aviso", JOptionPane.OK_OPTION);
 			}
 		}else if(e.getActionCommand().equals("stopServer")){
 			btnStop.setEnabled(false);
