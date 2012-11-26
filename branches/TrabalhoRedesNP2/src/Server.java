@@ -17,12 +17,19 @@ import util.CRC16;
 public class Server extends Thread {
 	public static final int PORT = 9999;
 	public static final int BUFFER_SIZE = 1024;
-
+	private static boolean running = true;
+	private String filePath = "";
+	static ServerSocket server = null;
+	OutputStream out = null;
+	InputStream entrada = null;
+	static Socket socket = null;
+	static Server instance = null;
+	
+	public Server(boolean b, String savePath) {
+		this.filePath = savePath;
+		this.running = b;
+	}
 	public void run() {
-		ServerSocket server = null;
-		OutputStream out = null;
-		InputStream entrada = null;
-		Socket socket = null;
 		try {
 			System.out.println("Server rodando");
 			server = new ServerSocket(PORT);
@@ -74,9 +81,7 @@ public class Server extends Thread {
 			System.out.println(crcOK);
 			
 			// write the byte array to a FileOutputStream
-			out = new FileOutputStream(new File(File.separator + "home"
-					+ File.separator + "thiagoponte" + File.separator
-					+ "received" + File.separator + fileName));
+			out = new FileOutputStream(new File(this.filePath + File.separator + fileName));
 			
 			byte[] file = HeaderUtils.getFile(total);
 			
@@ -122,9 +127,27 @@ public class Server extends Thread {
 			System.out.println("Server out...");
 		}
 	}
-	public static void main(String[] args) {
-		Server server = new Server();
-		server.start();
+	
+	public static void startServer(String savePath) {
+		Server.instance = new Server(true,savePath);
+		Server.instance.start();
+	}
+
+	public static void stopServer() {
+		try {
+			Server.running  = false;
+			if(Server.socket != null){
+				Server.socket.close();
+			}
+			if(Server.server != null){
+				Server.server.close();
+			}
+			Server.instance.finalize();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
 }
