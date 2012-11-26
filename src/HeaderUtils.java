@@ -11,7 +11,7 @@ public class HeaderUtils {
 	public static final byte PDU_RESPOSTA = (byte) 0xf2;
 	
 	public static final int CRC_POS_1 = 7;
-	public static final int CRC_POS_2 = 8;
+	public static final int CRC_POS_2 = 9;
 	
 	public static final int HEADER_LENGTH_POS_1 = 1;
 	public static final int HEADER_LENGTH_POS_2 = 2;
