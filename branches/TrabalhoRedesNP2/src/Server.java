@@ -31,15 +31,18 @@ public class Server extends Thread {
 			Window.logServer.setText("Server iniciado\n"+Window.logServer.getText());
 			server = new ServerSocket(serverPort);
 			socket = server.accept();
-			Window.logServer.setText("Conexão aceita\n"+Window.logServer.getText());
+			Window.logServer.setText("Conexao aceita\n"+Window.logServer.getText());
 			entrada = socket.getInputStream();
 			saida = socket.getOutputStream();
 			int read = 0;
 			byte[] bytes = new byte[BUFFER_SIZE];
+			int pckg = 0;
 			ByteArrayOutputStream b = new ByteArrayOutputStream();
 			while ((read = entrada.read(bytes)) != -1) {
+				pckg++;
 //				out.write(bytes, 0, read);
 				b.write(bytes,0, read);
+				Window.logServer.setText("Recebendo o pacote "+pckg+"\n"+Window.logServer.getText());
 			}
 			entrada.close();
 			//retrieve crc value
@@ -85,7 +88,7 @@ public class Server extends Thread {
 				total = HeaderUtils.getFile(total);
 				
 			}else{
-				//respota ERO - crc não bateu
+				//respota ERRO - crc nao bateu
 				resposta = new byte[] { ((byte)0xf2), ((byte)0xf2) };
 			}
 			saida.write(resposta);
@@ -121,7 +124,7 @@ public class Server extends Thread {
 			}
 			Window.btnStart.setEnabled(true);
 			Window.btnStop.setEnabled(false);
-			Window.logServer.setText("Server finazou a execução...\n"+Window.logServer.getText());
+			Window.logServer.setText("Server finazou a execucao...\n"+Window.logServer.getText());
 		}
 	}
 	

@@ -23,7 +23,7 @@ public class FileSendTest {
 			if (fileToSend.canRead()) {
 				socket = new Socket(ipDestino,port);
 				entrada = socket.getInputStream();
-				Window.logClient.setText("Iniciando transmissão...\n"+Window.logClient.getText());
+				Window.logClient.setText("Iniciando transmissao...\n"+Window.logClient.getText());
 				out = socket.getOutputStream();
 				byte[] header = new HeaderUtils(fileToSend.getName(), (int)fileToSend.length()).getHeader();
 				
@@ -33,9 +33,9 @@ public class FileSendTest {
 				for (int i=0; i<header.length; i++){
 					fullContent[i] = header[i];
 				}
-				
+				byte [] file = IOUtils.readFully(new FileInputStream(fileToSend), (int) fileToSend.length(), true);
 				for(int j=header.length, i=0; j<newSize ; j++ , i++){
-					fullContent[j] =  IOUtils.readFully(new FileInputStream(fileToSend), (int) fileToSend.length(), true)[i];
+					fullContent[j] =  file[i];
 				}
 //				byte[] fullContent = ArrayUtil.concat(header,);
 				header = null;
@@ -52,7 +52,7 @@ public class FileSendTest {
 					i++;
 					out.write(buffer, 0, read);
 					out.flush();
-					Window.logClient.setText("Pacote Nº "+i+" de tamanho "+read+"\n"+Window.logClient.getText());
+					Window.logClient.setText("Pacote Nï¿½ "+i+" de tamanho "+read+"\n"+Window.logClient.getText());
 					Window.progressBar.setValue(Window.progressBar.getValue()+read);
 					Window.progressBar.repaint();
 				}
@@ -71,7 +71,7 @@ public class FileSendTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally{
-			Window.logClient.setText("Encerrando transmissão...\n"+Window.logClient.getText());
+			Window.logClient.setText("Encerrando transmissï¿½o...\n"+Window.logClient.getText());
 			try{
 				if(out != null){
 					out.close();
