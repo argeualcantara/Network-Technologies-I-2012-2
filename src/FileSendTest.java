@@ -1,46 +1,68 @@
 
 import infra.HeaderUtils;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
 import sun.misc.IOUtils;
-import util.ArrayUtil;
 import util.CRC16;
 
 public class FileSendTest {
-	public static void enviarArquivo(File fileToSend, String ipDestino, int port, final int bufferSize) {
+
+	public static void enviarArquivo(File fileToSend, String ipDestino, int port, int bufferSize) {
+		InputStream entrada;
 		Socket socket = null;
 		ByteArrayInputStream in = null;
 		OutputStream out = null;
+		
 		try {
 			if (fileToSend.canRead()) {
 				socket = new Socket(ipDestino,port);
+				entrada = socket.getInputStream();
+				Window.logClient.setText("Iniciando transmissão...\n"+Window.logClient.getText());
 				out = socket.getOutputStream();
 				byte[] header = new HeaderUtils(fileToSend.getName(), (int)fileToSend.length()).getHeader();
 				
-				final byte[] fullContent = ArrayUtil.concat(header, IOUtils.readFully(new FileInputStream(fileToSend), (int) fileToSend.length(), true));
+				int newSize = header.length +  (int) fileToSend.length();
+				byte[] fullContent = new byte[newSize];
+				
+				for (int i=0; i<header.length; i++){
+					fullContent[i] = header[i];
+				}
+				
+				for(int j=header.length, i=0; j<newSize ; j++ , i++){
+					fullContent[j] =  IOUtils.readFully(new FileInputStream(fileToSend), (int) fileToSend.length(), true)[i];
+				}
+//				byte[] fullContent = ArrayUtil.concat(header,);
+				header = null;
 				fileToSend = null;
 				System.gc();
-				String calculate = CRC16.calculate(fullContent);
-				System.out.println("CRC-16 READ FROM CLIENT: "+calculate);
-				
+				Window.logClient.setText("CRC-16 READ FROM CLIENT: "+CRC16.calculate(fullContent)+"\n"+Window.logClient.getText());
 				in = new ByteArrayInputStream(fullContent);
 				byte[] buffer = new byte[bufferSize];
-				
 				Window.progressBar.setValue(0);
 				Window.progressBar.setMaximum(fullContent.length);
 				int read = 0;
+				int i = 0;
 				while (( read = in.read(buffer) )!= -1) {
+					i++;
 					out.write(buffer, 0, read);
 					out.flush();
+					Window.logClient.setText("Pacote Nº "+i+" de tamanho "+read+"\n"+Window.logClient.getText());
 					Window.progressBar.setValue(Window.progressBar.getValue()+read);
 					Window.progressBar.repaint();
+				}
+				byte resposta [] = new byte[2];
+				while(entrada.read(resposta) != -1){
+					if(resposta[1] == (byte) 0xf1){
+						Window.logClient.setText("Arquivo enviado com sucesso.\n"+Window.logClient.getText());
+					}else{
+						Window.logClient.setText("Arquivo enviado com falhas.\n"+Window.logClient.getText());
+					}
 				}
 				System.gc();
 				out.close();
@@ -49,7 +71,7 @@ public class FileSendTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally{
-			System.out.println("Client Out...");
+			Window.logClient.setText("Encerrando transmissão...\n"+Window.logClient.getText());
 			try{
 				if(out != null){
 					out.close();

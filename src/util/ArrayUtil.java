@@ -8,7 +8,6 @@ public class ArrayUtil {
 		int newSize = first.length + second.length;
 		byte[] toReturn = new byte[newSize];
 		
-		
 		for (int i=0; i<first.length; i++){
 			toReturn[i] = first[i];
 		}
