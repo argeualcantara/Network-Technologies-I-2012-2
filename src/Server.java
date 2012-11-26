@@ -52,6 +52,8 @@ public class Server extends Thread {
 			
 			//retrieve crc value
 			byte[] total = b.toByteArray();
+			b = null;
+			System.gc();
 			byte [] headerLenght =  new byte[2];
 			headerLenght[0] = total[HeaderUtils.HEADER_LENGTH_POS_1];
 			headerLenght[1] = total[HeaderUtils.HEADER_LENGTH_POS_2];
@@ -83,10 +85,10 @@ public class Server extends Thread {
 			// write the byte array to a FileOutputStream
 			out = new FileOutputStream(new File(this.filePath + File.separator + fileName));
 			
-			byte[] file = HeaderUtils.getFile(total);
+			total = HeaderUtils.getFile(total);
+			System.gc();
 			
-			
-			out.write(file);
+			out.write(total);
 			
 //			byte[] buffer = new byte[BUFFER_SIZE];
 //			
