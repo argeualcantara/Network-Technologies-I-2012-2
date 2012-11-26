@@ -124,6 +124,8 @@ public class Server extends Thread {
 					e1.printStackTrace();
 				}
 			}
+			Window.btnStart.setEnabled(true);
+			Window.btnStop.setEnabled(false);
 			System.out.println("Server out...");
 		}
 	}
