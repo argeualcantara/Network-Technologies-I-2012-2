@@ -11,9 +11,18 @@ import java.net.Socket;
 import sun.misc.IOUtils;
 import util.CRC16;
 
-public class FileSendTest {
-
-	public static void enviarArquivo(File fileToSend, String ipDestino, int port, int bufferSize) {
+public class FileSendTest extends Thread{
+	private File fileToSend;
+	private String ipDestino;
+	private int port;
+	private int bufferSize;
+	public FileSendTest(File fileToSend, String ipDestino, int port, int bufferSize){
+		this.fileToSend = fileToSend;
+		this.ipDestino = ipDestino;
+		this.port = port;
+		this.bufferSize = bufferSize;
+	}
+	public void run() {
 		InputStream entrada;
 		Socket socket = null;
 		ByteArrayInputStream in = null;
@@ -52,9 +61,12 @@ public class FileSendTest {
 					i++;
 					out.write(buffer, 0, read);
 					out.flush();
-					Window.logClient.setText("Pacote N� "+i+" de tamanho "+read+"\n"+Window.logClient.getText());
+					Window.logClient.setText("Pacote N "+i+" de tamanho "+read+"\n"+Window.logClient.getText());
 					Window.progressBar.setValue(Window.progressBar.getValue()+read);
 					Window.progressBar.repaint();
+				}
+				while(entrada.available() < 2){
+					FileSendTest.sleep(300);
 				}
 				byte resposta [] = new byte[2];
 				while(entrada.read(resposta) != -1){
@@ -71,7 +83,7 @@ public class FileSendTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally{
-			Window.logClient.setText("Encerrando transmiss�o...\n"+Window.logClient.getText());
+			Window.logClient.setText("Encerrando transmissao...\n"+Window.logClient.getText());
 			try{
 				if(out != null){
 					out.close();
