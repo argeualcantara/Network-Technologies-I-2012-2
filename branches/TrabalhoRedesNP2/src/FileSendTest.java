@@ -21,21 +21,15 @@ public class FileSendTest {
 		try {
 			if (fileToSend.canRead()) {
 				socket = new Socket(ipDestino,port);
-//				long crc = calcuarCrc(fileToSend);
-//				System.out.println("Client CRC: "+crc);
 				out = socket.getOutputStream();
-				System.out.println("Integer: "+(int)fileToSend.length());
-				System.out.println("Long: "+fileToSend.length());
 				byte[] header = new HeaderUtils(fileToSend.getName(), (int)fileToSend.length()).getHeader();
 				
-//				String calculate = CRC16.calculate(fileToSend);
 				final byte[] fullContent = ArrayUtil.concat(header, IOUtils.readFully(new FileInputStream(fileToSend), (int) fileToSend.length(), true));
-				
+				fileToSend = null;
+				System.gc();
 				String calculate = CRC16.calculate(fullContent);
-//				CRC16.addCRC(fullContent,calculate);
 				System.out.println("CRC-16 READ FROM CLIENT: "+calculate);
 				
-//				in = new FileInputStream(fileToSend);
 				in = new ByteArrayInputStream(fullContent);
 				byte[] buffer = new byte[bufferSize];
 				
@@ -45,11 +39,10 @@ public class FileSendTest {
 				while (( read = in.read(buffer) )!= -1) {
 					out.write(buffer, 0, read);
 					out.flush();
-					int valor = (int) fullContent.length / bufferSize;
-					Window.progressBar.setValue(Window.progressBar.getValue()+valor);
+					Window.progressBar.setValue(Window.progressBar.getValue()+read);
 					Window.progressBar.repaint();
-//					Thread.sleep(700);
 				}
+				System.gc();
 				out.close();
 				in.close();
 			}
