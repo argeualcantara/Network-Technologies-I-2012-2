@@ -37,6 +37,8 @@ public class Window implements ActionListener{
 	private JTextField clientPort;
 	private JTextField bufferSize;
 	private JTextField ipDestino;
+	static JTextArea logClient = null;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -94,10 +96,16 @@ public class Window implements ActionListener{
 		layeredPane.add(panelClient);
 		panelClient.setLayout(null);
 		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 299, 703, 295);
+		panelClient.add(scrollPane_1);
+		logClient = new JTextArea();
+		logClient.setEditable(false);
+		scrollPane_1.setViewportView(logClient);
+		
 		JButton btnArquivo = new JButton("Arquivo");
 		btnArquivo.addActionListener(this);
 		btnArquivo.setActionCommand("chooseFileToSend");
-		
 		btnArquivo.setBounds(478, 11, 93, 23);
 		panelClient.add(btnArquivo);
 		
@@ -110,11 +118,11 @@ public class Window implements ActionListener{
 		JButton buttonEnviar = new JButton("Enviar");
 		buttonEnviar.addActionListener(this);
 		buttonEnviar.setActionCommand("sendFile");
-		buttonEnviar.setBounds(136, 194, 93, 23);
+		buttonEnviar.setBounds(136, 170, 93, 23);
 		panelClient.add(buttonEnviar);
 		
 		progressBar = new JProgressBar();
-		progressBar.setBounds(146, 252, 417, 36);
+		progressBar.setBounds(136, 223, 417, 36);
 		panelClient.add(progressBar);
 		
 		clientPort = new JTextField("9999");
@@ -123,11 +131,11 @@ public class Window implements ActionListener{
 		clientPort.setColumns(10);
 		
 		JLabel lblArquivo = new JLabel("Arquivo");
-		lblArquivo.setBounds(51, 11, 70, 15);
+		lblArquivo.setBounds(81, 15, 37, 15);
 		panelClient.add(lblArquivo);
 		
 		JLabel lblPort_1 = new JLabel("Port");
-		lblPort_1.setBounds(53, 65, 70, 15);
+		lblPort_1.setBounds(91, 69, 30, 15);
 		panelClient.add(lblPort_1);
 		
 		bufferSize = new JTextField("1024");
@@ -136,17 +144,21 @@ public class Window implements ActionListener{
 		bufferSize.setColumns(10);
 		
 		JLabel lblSegmentokb = new JLabel("Segmento (bytes)");
-		lblSegmentokb.setBounds(0, 97, 130, 20);
+		lblSegmentokb.setBounds(35, 100, 86, 20);
 		panelClient.add(lblSegmentokb);
 		
 		ipDestino = new JTextField();
-		ipDestino.setBounds(136, 35, 114, 19);
+		ipDestino.setBounds(136, 36, 114, 19);
 		panelClient.add(ipDestino);
 		ipDestino.setColumns(10);
 		
 		JLabel lblIpDestino = new JLabel("IP Destino");
-		lblIpDestino.setBounds(25, 38, 96, 15);
+		lblIpDestino.setBounds(64, 41, 57, 15);
 		panelClient.add(lblIpDestino);
+		
+		JLabel lblLog_1 = new JLabel("Log:");
+		lblLog_1.setBounds(35, 274, 46, 14);
+		panelClient.add(lblLog_1);
 		
 		panelServer = new JPanel();
 		panelServer.setBounds(0, 0, 741, 634);
@@ -190,6 +202,7 @@ public class Window implements ActionListener{
 		
 		logServer = new JTextArea();
 		scrollPane.setViewportView(logServer);
+		logServer.setEditable(false);
 		
 		JLabel lblLog = new JLabel("Log:");
 		lblLog.setBounds(38, 248, 70, 15);
@@ -203,6 +216,7 @@ public class Window implements ActionListener{
 		JLabel lblPort = new JLabel("Port");
 		lblPort.setBounds(72, 61, 70, 15);
 		panelServer.add(lblPort);
+		
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -244,7 +258,7 @@ public class Window implements ActionListener{
 			if(savePath.getText().trim().length() > 0 && serverPort.getText().trim().length() > 0){
 				btnStop.setEnabled(true);
 				btnStart.setEnabled(false);
-				Server.startServer(savePath.getText());
+				Server.startServer(savePath.getText(),Integer.parseInt(serverPort.getText()));
 			}else{
 				JOptionPane.showMessageDialog(null, "Escolha o local de recebimento do arquivo e a porta.", "Aviso", JOptionPane.OK_OPTION);
 			}

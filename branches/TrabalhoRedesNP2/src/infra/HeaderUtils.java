@@ -6,7 +6,6 @@ public class HeaderUtils {
 	private byte tipoPdu;
 	private byte[] headerLength = new byte[2];
 	private byte[] fileLength = new byte[4];
-	private byte[] crc = new byte[2];
 	private byte[] fileName;
 	private byte[] header;
 	
@@ -79,7 +78,7 @@ public class HeaderUtils {
 		headerSize[0] = total[HeaderUtils.HEADER_LENGTH_POS_1];
 		headerSize[1] = total[HeaderUtils.HEADER_LENGTH_POS_2];
 		int headerFinalPos = Integer.parseInt(new String(headerSize));
-		
+		headerSize = null;
 		byte [] fileSize = new byte [4];
 		fileSize[0] = total[3];
 		fileSize[1] = total[4];
@@ -90,9 +89,10 @@ public class HeaderUtils {
 		{
 			fileSizevalue = (fileSizevalue << 8) + (fileSize[i] & 0xff);
 		}
-		
+		fileSize = null;
 		
 		byte [] file = new byte[fileSizevalue];
+		System.gc();
 		int j = 0;
 		for (int i = headerFinalPos; j < file.length -1; i++) {
 			file[j] = total[i];
@@ -111,7 +111,8 @@ public class HeaderUtils {
 		headerSize[0] = total[HeaderUtils.HEADER_LENGTH_POS_1];
 		headerSize[1] = total[HeaderUtils.HEADER_LENGTH_POS_2];
 		int headerFinalPos = Integer.parseInt(new String(headerSize));
-		
+		headerSize = null;
+		System.gc();
 		byte [] header = new byte[headerFinalPos];
 		for (int i = 0; i < header.length; i++) {
 			header[i] = total[i];

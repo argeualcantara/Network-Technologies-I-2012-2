@@ -75,8 +75,6 @@ public class CRC16 {
 		byte[] array = hexStringToByteArray(Integer.toHexString(crc));
 		content[7] = array[0];
 		content[8] = array[1];
-		System.out.println(array[0]);
-		System.out.println(array[1]);
 		return Integer.toHexString(crc);
 	}
 
