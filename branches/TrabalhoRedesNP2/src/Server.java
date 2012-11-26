@@ -12,7 +12,7 @@ import java.net.Socket;
 import util.CRC16;
 
 public class Server extends Thread {
-	public static final int BUFFER_SIZE = 1024;
+	public static final int BUFFER_SIZE = 8192;
 	private String filePath = "";
 	private int serverPort = -1;
 	static ServerSocket server = null;

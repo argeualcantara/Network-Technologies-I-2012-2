@@ -172,7 +172,7 @@ public class Window implements ActionListener{
 		btnEscolha.setBounds(287, 112, 117, 25);
 		panelServer.add(btnEscolha);
 		
-		JLabel lblEscolhaOndeOs = new JLabel("Escolha onde os arquivos serão armazenados:");
+		JLabel lblEscolhaOndeOs = new JLabel("Escolha onde o arquivo sera armazenado:");
 		lblEscolhaOndeOs.setBounds(12, 90, 392, 15);
 		panelServer.add(lblEscolhaOndeOs);
 		
@@ -229,12 +229,11 @@ public class Window implements ActionListener{
 		}else if(e.getActionCommand().equals("sendFile")){
 			if(filePath.getText().trim().length() > 0 && clientPort.getText().trim().length() > 0 
 					&& ipDestino.getText().trim().length() > 0 && bufferSize.getText().trim().length() > 0){
-				new Thread(){
-					public void run(){
-						FileSendTest.enviarArquivo(fileToSend, ipDestino.getText(), 
-								Integer.parseInt(clientPort.getText()), Integer.parseInt(bufferSize.getText()));
-					}
-				}.start();
+				
+				FileSendTest fileSend =  new FileSendTest(fileToSend, ipDestino.getText(), 
+						Integer.parseInt(clientPort.getText()), Integer.parseInt(bufferSize.getText()));
+				fileSend.start();
+				
 				
 			}else{
 				JOptionPane.showMessageDialog(null, "Preencha todos os campos", "Aviso", JOptionPane.OK_OPTION);
