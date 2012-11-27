@@ -61,24 +61,24 @@ public class FileSendTest extends Thread{
 					i++;
 					out.write(buffer, 0, read);
 					out.flush();
-					Window.logClient.setText("Pacote N "+i+" de tamanho "+read+"\n"+Window.logClient.getText());
+//					Window.logClient.setText("Pacote N "+i+" de tamanho "+read+"\n"+Window.logClient.getText());
 					Window.progressBar.setValue(Window.progressBar.getValue()+read);
 					Window.progressBar.repaint();
 				}
-				while(entrada.available() < 2){
-					FileSendTest.sleep(300);
-				}
-				byte resposta [] = new byte[2];
-				while(entrada.read(resposta) != -1){
-					if(resposta[1] == (byte) 0xf1){
-						Window.logClient.setText("Arquivo enviado com sucesso.\n"+Window.logClient.getText());
-					}else{
-						Window.logClient.setText("Arquivo enviado com falhas.\n"+Window.logClient.getText());
-					}
-				}
+//				byte resposta [] = new byte[2];
+//				while(entrada.available() < 2){
+//					FileSendTest.sleep(300);
+//				}
+//				while(entrada.read(resposta) != -1){
+//					if(resposta[1] == (byte) 0xf1){
+//						Window.logClient.setText("Arquivo enviado com sucesso.\n"+Window.logClient.getText());
+//					}else{
+//						Window.logClient.setText("Arquivo enviado com falhas.\n"+Window.logClient.getText());
+//					}
+//				}
 				System.gc();
-				out.close();
-				in.close();
+//				out.close();
+//				in.close();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
